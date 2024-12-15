@@ -22,8 +22,8 @@ Contents
    ![Quá trình biên dịch](compiler1..jpg)
 ### 1.2 HOẠT ĐỘNG 
    ***1. Giai đoạn tiền xử lý - Preprocessor***
-    - Nhận mã nguồn.
-     - Xóa bỏ chú thích, comments của chướng trình.
+    - Nhận mã nguồn.00
+    - Xóa bỏ chú thích, comments của chướng trình.
     - Chỉ thị tiền xử lý(bắt đầu bằng dấu #) cũng được xử lý.
     - Gộp các file .c, .h ... thành 1 file .i .
     - Giữ lại các biến và hàm.
