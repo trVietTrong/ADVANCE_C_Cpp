@@ -39,11 +39,13 @@ Contents
    ***2. Compiler (Giai đoạn dịch NNBC sang ngôn ngữ Assembly):***
 
     - Quá trình này compiler sẽ biên dịch từ file .i sang file ngôn ngữ assembly là file .s
-    -   Dùng lệnh gcc -S main.i -o main.s
+    - Dùng lệnh gcc -S main.i -o main.s
    ***3. Assembler (Giai đoạn dịch ngôn ngữ Assembly sang ngôn ngữ máy):*** 
+
     -   Compiler sẽ Biên dịch ngôn ngữ Assembly sang ngôn ngữ máy (0 và 1). Và tạo ra tệp tin Object .o
     -   Dùng lệnh gcc -c main.s -o main.o để tạo ra file .o
    ***4. Linker (Giải đoạn liên kết):***
+
     -   1 hoặc nhiều file.o sẽ được compiler liên kết lại 1 File .exe.
     -   File này để hệ điều hành chạy
     -   Dùng lệnh gcc main.o -o filename để tạo ra tệp thực thi .
@@ -51,14 +53,15 @@ Contents
 ## II. MACRO
 ### 1. ĐỊNH NGHĨA 
 
-    Trong ngôn ngữ lập trình C, macro là một cách để định nghĩa một 
-    khối mã nguồn mà có thể được sử dụng nhiều lần trong chương trình. 
-    Macro được xác định bằng cụm từ #define trong C. Khi chương trình 
-    được biên dịch, macro sẽ được thay thế bằng nội dung mà nó định 
-    nghĩa, trước khi mã nguồn được biên dịch.
+    Trong ngôn ngữ lập trình C, macro là một cách để định nghĩa một khối mã nguồn mà có thể được sử dụng 
+    nhiều lần trong chương trình. Macro được xác định bằng cụm từ #define trong C. Khi chương trình được
+    biên dịch, macro sẽ được thay thế bằng nội dung mà nó định nghĩa, trước khi mã nguồn được biên dịch.
+
     Macro trong C gồm: 1. Chỉ thị bao hàm tệp
                        2. Chỉ thị định nghĩa
                        3. Chỉ thị biên dịc có điều kiện
+                        ......
+
 #### 1.1 Chỉ thị bao hàm tệp 
 
     Trong ngôn ngữ lập trình C, chỉ thị để bao hàm một tệp vào một
@@ -66,7 +69,8 @@ Contents
     phép bạn bao gồm nội dung của một tệp header vào trong mã nguồn
     của bạn trước khi chương trình được biên dịch.
 
-    1. Bao hàm tệp header bằng <>:
+    1. Bao hàm tệp header bằng <>: 
+
         Khi bạn sử dụng #include <header.h>, trình biên dịch sẽ tìm
         kiếm tệp header trong các thư mục chuẩn của hệ thống. 
         Ví dụ: #include <stdio.h>, #include <math.h> ...
@@ -77,11 +81,12 @@ Contents
         sử dụng cho các tệp header do người dùng tạo ra hoặc tùy chỉnh.
         Ví dụ: #include "myheader.h", ....
 #### 1.2 Chỉ thị định nghĩa macro
+
     Chỉ thị #define được sử dụng để định nghĩa macro. 
 -   Định nghĩa một hằng số
 -   Định nghĩa một chuỗi
 -   Định nghĩa hàm (chú ý dấu \ sau mỗi dòngdòng)
-  ......
+    ......
 ```c
 #include<stdio.h>
 #include"Test2.c"
@@ -99,6 +104,7 @@ void name(){            \
 FUNC(Test11, "My name is Trong");
 ```
 #### 1.3 Chỉ thi hủy định nghĩa một macro
+
     Khi bạn sử dụng chỉ thị #define, bạn tạo ra một macro mà trình biên
     dịch sẽ thay thế tất cả các trường hợp của macro đó trong mã nguồn
     của bạn bằng nội dung mà bạn đã định nghĩa. Khi bạn muốn loại bỏ
@@ -120,6 +126,7 @@ int main() {
 }
 ```
 #### 1.4 Chỉ thị biên dịch có điều kiện
+
 1.  #ifdef và #ifndef: Kiểm tra xem một macro đã được định nghĩa hay chưa.
     -   #ifdef MACRO: Kiểm tra xem macro MACRO đã được định nghĩa hay chưa.
     -   #ifndef MACRO: Kiểm tra xem macro MACRO chưa được định nghĩa.
@@ -158,6 +165,7 @@ Chỉ thị #ifndef PI kiểm tra xem macro PI đã được định nghĩa hay 
 
 
 2. #if, #elif, #else, #endif: Thực hiện biên dịch dựa trên giá trị của các biểu thức.
+3. 
     -   #if condition: Biên dịch nếu điều kiện là đúng.
     -   #elif condition: Biên dịch nếu điều kiện trước đó sai và điều kiện hiện tại đúng.
     -   #else: Biên dịch nếu tất cả các điều kiện trước đó đều sai.
