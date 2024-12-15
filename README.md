@@ -612,7 +612,7 @@ Output:
 Selected Features:
 - Gender
 - Hat
-- shoesshoes
+- Shoes
 feature selected: 1
 feature selected: 0
 feature selected: 1
