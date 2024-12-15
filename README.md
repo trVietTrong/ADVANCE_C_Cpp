@@ -75,6 +75,7 @@ Contents
         kiếm tệp header trong các thư mục chuẩn của hệ thống. 
         Ví dụ: #include <stdio.h>, #include <math.h> ...
     2. Bao hàm tệp header bằng "":
+   
         Khi bạn sử dụng #include "header.h", trình biên dịch sẽ tìm 
         kiếm tệp header trong cùng thư mục với tệp mã nguồn hiện tại 
         trước khi tìm trong các thư mục khác. Điều này thường được 
@@ -87,6 +88,7 @@ Contents
 -   Định nghĩa một chuỗi
 -   Định nghĩa hàm (chú ý dấu \ sau mỗi dòngdòng)
     ......
+
 ```c
 #include<stdio.h>
 #include"Test2.c"
@@ -102,14 +104,18 @@ void name(){            \
 }
 
 FUNC(Test11, "My name is Trong");
+
 ```
+Trong đoạn code này: 
+- Định nghĩa các hằng số PI, SIZE, và chuỗi CHUOI sử dụng #define.
+- Sử dụng macro FUNC để định nghĩa một hàm với tên và nội dung được truyền vào như tham số.
+
 #### 1.3 Chỉ thi hủy định nghĩa một macro
 
-    Khi bạn sử dụng chỉ thị #define, bạn tạo ra một macro mà trình biên
-    dịch sẽ thay thế tất cả các trường hợp của macro đó trong mã nguồn
-    của bạn bằng nội dung mà bạn đã định nghĩa. Khi bạn muốn loại bỏ
-    hoặc hủy bỏ định nghĩa của một macro, bạn có thể sử dụng chỉ thị
-    #undef.
+    Khi bạn sử dụng chỉ thị #define, bạn tạo ra một macro mà trình biên dịch sẽ thay thế tất
+    cả các trường hợp của macro đó trong mã nguồncủa bạn bằng nội dung mà bạn đã định nghĩa. 
+    Khi bạn muốn loại bỏhoặc hủy bỏ định nghĩa của một macro, bạn có thể sử dụng chỉ thị #undef.
+
 ```c
 #include <stdio.h>
 
@@ -125,13 +131,20 @@ int main() {
     return 0;
 }
 ```
+Trong đoạn code trên:
+- Chúng ta định nghĩa macro PI với giá trị ban đầu là 3.14159.
+- Sau đó, chúng ta sử dụng macro PI để in ra giá trị của PI.
+- Tiếp theo, chúng ta hủy định nghĩa của macro PI bằng #undef và định nghĩa lại nó với giá trị 55.
+- Cuối cùng, chúng ta in ra giá trị mới của PI sau khi định nghĩa lại, là 55.
+
 #### 1.4 Chỉ thị biên dịch có điều kiện
 
-1.  #ifdef và #ifndef: Kiểm tra xem một macro đã được định nghĩa hay chưa.
-    -   #ifdef MACRO: Kiểm tra xem macro MACRO đã được định nghĩa hay chưa.
-    -   #ifndef MACRO: Kiểm tra xem macro MACRO chưa được định nghĩa.
+    -  #ifdef và #ifndef: Kiểm tra xem một macro đã được định nghĩa hay chưa.
+    -  #ifdef MACRO: Kiểm tra xem macro MACRO đã được định nghĩa hay chưa.
+    -  #ifndef MACRO: Kiểm tra xem macro MACRO chưa được định nghĩa.
   
 ***Ví dụ sử dụng #ifdef và #endif:***
+
 ```c
 #include <stdio.h>
 
@@ -139,14 +152,20 @@ int main() {
 
 int main() {
     #ifdef PI
-        printf("Debug mode is enabled.\n");
+        printf("PI = 3.14\n");
     #endif
 
     return 0;
 }
 ```
-Trong ví dụ trên, nếu macro PIPI đã được định nghĩa, dòng printf sẽ được biên dịch vào mã, ngược lại thì không.
+Trong ví dụ trên:
+- Macro PI được định nghĩa với giá trị 3.14.
+- Sử dụng #ifdef để kiểm tra xem macro PI có được định nghĩa hay không. 
+Nếu có, dòng "PI = 3.14 " sẽ được in ra.
+- Chương trình sẽ kết thúc sau khi in ra thông báo và trả về giá trị 0.
+- 
 ***Ví dụ sử dụng #ifdef và #endif:***
+
 ```c
 #include <stdio.h>
 
@@ -161,17 +180,20 @@ int main() {
 }
 
 ```
-Chỉ thị #ifndef PI kiểm tra xem macro PI đã được định nghĩa hay chưa. Nếu PI chưa được định nghĩa, khối mã trong #ifndef sẽ được thực thi và macro PI sẽ được định nghĩa với giá trị là 3.14159.
+Chỉ thị #ifndef PI kiểm tra xem macro PI đã được định nghĩa hay chưa. Nếu PI 
+chưa được định nghĩa, khối mã trong #ifndef sẽ được thực thi và macro PI sẽ 
+được định nghĩa với giá trị là 3.14 .
 
 
 2. #if, #elif, #else, #endif: Thực hiện biên dịch dựa trên giá trị của các biểu thức.
-3. 
+
     -   #if condition: Biên dịch nếu điều kiện là đúng.
     -   #elif condition: Biên dịch nếu điều kiện trước đó sai và điều kiện hiện tại đúng.
     -   #else: Biên dịch nếu tất cả các điều kiện trước đó đều sai.
     -   #endif: Kết thúc một khối điều kiện.
 
 ***Ví dụ sử dụng #if, #elif, #else, #endif***
+
 ```c
 #include <stdio.h>
 
@@ -202,11 +224,19 @@ int main(int argc, char const *argv[])
     return 0;
 }
 ```
+Trong đoạn code trên:
+- Các macromacro ESP32, STM32 và ATmega được định nghĩa.
+- Macro MCU được đặt là STM32.
+- Trong vòng lặp while, chúng ta sử dụng các điều kiện #if, #elif, và #else để in ra tên của 
+vi điều khiển tương ứng với giá trị của MCU.
+- Cuối cùng, chúng ta sử dụng #endif để kết thúc các điều kiện tiền xử lý.
 #### 1.5 Variadic macro
-        Variadic macros trong ngôn ngữ lập trình C cho phép bạn định nghĩa các
-    macro có số lượng tham số biến đổi. Điều này có nghĩa là số lượng tham 
-    số của macro có thể thay đổi khi được sử dụng. Để định nghĩa một macro
-    biến tham số, bạn sử dụng ... để chỉ ra số lượng tham số có thể biến đổi.
+
+    Variadic macros trong ngôn ngữ lập trình C cho phép bạn định nghĩa cácmacro có số lượng
+tham số biến đổi. Điều này có nghĩa là số lượng tham số của macro có thể thay đổi khi được 
+sử dụng. Để định nghĩa một macro biến tham số, bạn sử dụng ... để chỉ ra số lượng tham số 
+có thể biến đổi.
+
 
 ```c
 #include <stdio.h>
@@ -460,7 +490,8 @@ Output:
     b>>1 = 4
 
 ### Thư viên stdint.h 
-- Thư viện stdint.h trong C cung cấp các kiểu dữ liệu số nguyên có độ rộng cố định với các kích thước cụ thể, không phụ thuộc vào nền tảng hoặc trình biên dịch cụ thể.
+- Thư viện stdint.h trong C cung cấp các kiểu dữ liệu số nguyên có độ rộng cố định với các kích thước cụ thể, 
+  không phụ thuộc vào nền tảng hoặc trình biên dịch cụ thể.
   
   Dưới đây là một số kiểu dữ liệu phổ biến được định nghĩa trong stdint.h:
 
@@ -468,3 +499,4 @@ Output:
         Các kiểu số nguyên có độ rộng cố định với số bit cụ thể (8, 16, 32, 64 bit) và dấu.
     ***uint8_t, uint16_t, uint32_t, uint64_t:***
         Các kiểu số nguyên không dấu có độ rộng cố định với số bit cụ thể (8, 16, 32, 64 bit).
+
