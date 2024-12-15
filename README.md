@@ -507,7 +507,119 @@ Output:
   Dưới đây là một số kiểu dữ liệu phổ biến được định nghĩa trong stdint.h:
 
     ***int8_t, int16_t, int32_t, int64_t:***
-        Các kiểu số nguyên có độ rộng cố định với số bit cụ thể (8, 16, 32, 64 bit) và dấu.
+
+    Các kiểu số nguyên có độ rộng cố định với số bit cụ thể (8, 16, 32, 64 bit) và dấu.
     ***uint8_t, uint16_t, uint32_t, uint64_t:***
-        Các kiểu số nguyên không dấu có độ rộng cố định với số bit cụ thể (8, 16, 32, 64 bit).
+
+    Các kiểu số nguyên không dấu có độ rộng cố định với số bit cụ thể (8, 16, 32, 64 bit).
+
+## Ứng dụng bitmask trong thực tế
+```c
+
+#include <stdio.h>
+#include <stdint.h>
+
+
+#define GENDER        1 << 0  //0b00000001
+#define TSHIRT        1 << 1  //0b00000010
+#define HAT           1 << 2  //0b00000100
+#define SHOES         1 << 3  //0b00001000
+// Tự thêm tính năng khác
+#define FEATURE1      1 << 4  //0b00010000
+#define FEATURE2      1 << 5  //0b00100000
+#define FEATURE3      1 << 6  //0b01000000
+#define FEATURE4      1 << 7  //0b10000000
+
+/*
+    Sử dụng bit wise | để bật 1 tính năng mà không ảnh hưởng đến bit khác
+    ví dụ bật tín năng số 1:
+    0b10000000 (option)
+    |
+    0b00000001 
+    ----------
+    0b10000001
+*/
+
+void enableFeature(uint8_t *option, uint8_t feature) {
+    *option |= feature;
+}
+
+/*
+    Sử dụng bit wise & tắt 1 tính năng mà không ảnh hưởng tới bit khác
+    Vi dụ tắt tính năng sô 1:
+    0b00000111 (option), 0b00000001(feature), 0b11111110(~feature)
+    
+    0b00000111(option)
+    &
+    0b11111110(~feature)
+    ----------
+    0b00000110
+*/
+
+void disableFeature(uint8_t *option, uint8_t feature) {
+    *option &= ~feature;
+}
+
+// Kiểm tra những bit nao được bật 
+int isFeatureEnabled(uint8_t option, uint8_t option) {
+    return (option & option) != 0;
+}
+
+void listSelectedFeatures(uint8_t option) {
+    printf("Selected Features:\n");
+
+    if (option & GENDER) {
+        printf("- Gender\n");
+    }
+    if (option & TSHIRT) {
+        printf("- T-Shirt\n");
+    }
+    if (option & HAT) {
+        printf("- Hat\n");
+    }
+    if (option & SHOES) {
+        printf("- Shoes\n");
+    }
+
+    for (int i = 0; i < 8; i++)
+    {
+        printf("feature selected: %d\n", (option >> i) & 1);
+    }
+    
+
+    // Thêm các điều kiện kiểm tra cho các tính năng khác
+}
+
+
+
+int main() {
+    uint8_t options = 0;
+
+    // Thêm tính năng 
+    enableFeature(&options, GENDER | TSHIRT | HAT | SHOES);
+
+    disableFeature(&options, TSHIRT);
+
+    // Liệt kê các tính năng đã chọn
+    listSelectedFeatures(options);
+    
+    return 0;
+}
+
+```
+Output:
+```c
+Selected Features:
+- Gender
+- Hat
+- shoesshoes
+feature selected: 1
+feature selected: 0
+feature selected: 1
+feature selected: 1
+feature selected: 0
+feature selected: 0
+feature selected: 0
+feature selected: 0
+```
 
