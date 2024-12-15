@@ -21,8 +21,10 @@ Contents
    
    ![Quá trình biên dịch](compiler1..jpg)
 ### 1.2 HOẠT ĐỘNG 
+
    ***1. Giai đoạn tiền xử lý - Preprocessor***
-    - Nhận mã nguồn.00
+
+    - Nhận mã nguồn.
     - Xóa bỏ chú thích, comments của chướng trình.
     - Chỉ thị tiền xử lý(bắt đầu bằng dấu #) cũng được xử lý.
     - Gộp các file .c, .h ... thành 1 file .i .
@@ -31,12 +33,15 @@ Contents
    
    Ví dụ: 
    ![Quá trình tiền xử lý](pre.jpg)
-   Giải thích: Nội dung của thư viện stdio.h và nội dung của file Test.c sẽ được copy vào file Test1.i, các macro define sẽ được thay thế và giữ lại các biến và hàm.
+   Giải thích: Nội dung của thư viện stdio.h và nội dung của file Test.c sẽ được copy vào file Test1.i, 
+   các macro define sẽ được thay thế và giữ lại các biến và hàm.
 
    ***2. Compiler (Giai đoạn dịch NNBC sang ngôn ngữ Assembly):***
+
     - Quá trình này compiler sẽ biên dịch từ file .i sang file ngôn ngữ assembly là file .s
     -   Dùng lệnh gcc -S main.i -o main.s
-   ***3. Assembler (Giai đoạn dịch ngôn ngữ Assembly sang ngôn ngữ máy):*** compiler sẽ Biên dịch ngôn ngữ Assembly sang ngôn ngữ máy (0 và 1). Và tạo ra tệp tin Object .o
+   ***3. Assembler (Giai đoạn dịch ngôn ngữ Assembly sang ngôn ngữ máy):*** 
+    -   Compiler sẽ Biên dịch ngôn ngữ Assembly sang ngôn ngữ máy (0 và 1). Và tạo ra tệp tin Object .o
     -   Dùng lệnh gcc -c main.s -o main.o để tạo ra file .o
    ***4. Linker (Giải đoạn liên kết):***
     -   1 hoặc nhiều file.o sẽ được compiler liên kết lại 1 File .exe.
@@ -45,6 +50,7 @@ Contents
 
 ## II. MACRO
 ### 1. ĐỊNH NGHĨA 
+
     Trong ngôn ngữ lập trình C, macro là một cách để định nghĩa một 
     khối mã nguồn mà có thể được sử dụng nhiều lần trong chương trình. 
     Macro được xác định bằng cụm từ #define trong C. Khi chương trình 
@@ -54,6 +60,7 @@ Contents
                        2. Chỉ thị định nghĩa
                        3. Chỉ thị biên dịc có điều kiện
 #### 1.1 Chỉ thị bao hàm tệp 
+
     Trong ngôn ngữ lập trình C, chỉ thị để bao hàm một tệp vào một
     chương trình là chỉ thị tiền xử lý #include. Chỉ thị này cho 
     phép bạn bao gồm nội dung của một tệp header vào trong mã nguồn
