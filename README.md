@@ -439,16 +439,22 @@ Trong đoạn code trên biến x không bằng 1010 nên trương trình sẽ g
 ***Các phép toán bitwise (thự hiện trên bit)***
 
 ***AND (&):***
+
     - Phép toán AND (và) trên hai bit, trả về 1 nếu cả hai bit đều là 1, ngược lại trả về 0.
 ***OR (|):***
+
     - Phép toán OR (hoặc) trên hai bit, trả về 1 nếu một trong hai bit hoặc cả hai bit là 1, ngược lại trả về 0.
 ***XOR (^):***
+
     - Phép toán XOR (hoặc loại trừ) trên hai bit, trả về 1 nếu hai bit khác nhau, ngược lại trả về 0.
 ***NOT (~):***
+
     - Phép toán NOT (phủ định) hoán đổi các bit, chuyển 0 thành 1 và ngược lại.
 ***Shift Left (<<):***
+
     - Phép toán dịch trái, dịch các bit sang trái và điền vào các bit bên phải bằng 0.
 ***Shift Right (>>):***
+
     - Phép toán dịch phải, dịch các bit sang phải và điền vào các bit bên trái bằng 0 hoặc 1 (phụ thuộc vào loại dịch).
 
 ![Các phép toán bitwise](bit.jpg)
@@ -481,11 +487,17 @@ int main()
 
 Output:
     a = 5, b = 9
+
     a&b = 1
+
     a|b = 13
+
     a^b = 12
+
     ~a = 4294967290
+
     b<<1 = 18
+    
     b>>1 = 4
 
 ### Thư viên stdint.h 
