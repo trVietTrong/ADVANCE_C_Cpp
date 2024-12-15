@@ -231,11 +231,10 @@ Trong đoạn code trên:
 vi điều khiển tương ứng với giá trị của MCU.
 - Cuối cùng, chúng ta sử dụng #endif để kết thúc các điều kiện tiền xử lý.
 #### 1.5 Variadic macro
-
     Variadic macros trong ngôn ngữ lập trình C cho phép bạn định nghĩa cácmacro có số lượng
-tham số biến đổi. Điều này có nghĩa là số lượng tham số của macro có thể thay đổi khi được 
-sử dụng. Để định nghĩa một macro biến tham số, bạn sử dụng ... để chỉ ra số lượng tham số 
-có thể biến đổi.
+    tham số biến đổi. Điều này có nghĩa là số lượng tham số của macro có thể thay đổi khi được
+    sử dụng. Để định nghĩa một macro biến tham số, bạn sử dụng ... để chỉ ra số lượng tham số 
+    có thể biến đổi.
 
 
 ```c
