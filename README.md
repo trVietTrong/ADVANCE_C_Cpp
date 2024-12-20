@@ -1,199 +1,149 @@
 # Advance_C_Cpp
-Contents
+## Contents
 
 <details>
-<summary>LESSON 1: COMPILER - MACRO</summary> 
+<summary>LESSON 1: COMPILER - MACRO</summary>
 
 ---
 
+### **I. Compiler**
+- Compiler là quá trình chuyển đổi ngôn ngữ bậc cao sang ngôn ngữ máy.
+- Gồm 4 giai đoạn chính:
+  
+  ![Compiler stages](image.png)
 
-## I. COMPILER
-### 1. ĐỊNH NGHĨA 
-#### 1.1Quá trình biên dịch
-    Quy trình dịch là quá trình chuyển đổi từ ngôn ngữ bậc cao(NNBC) 
-    (C/C++, Pascal, Java, C#…) sang ngôn ngữ đích (ngôn ngữ máy) để 
-    máy tính có thể hiểu và thực thi.
-#### Quá trình biên dịch gồm 4 giai đoạn
-    1. Giai đoạn tiền xử lý (Pre-processor).
-    2. Giai đoạn dịch NNBC sang Asembly (Compiler).
-    3. Giai đoạn dịch asembly sang ngôn ngữ máy (Asembller).
-    4. Giai đoạn liên kết (Linker).
-   
-   ![Quá trình biên dịch](compiler1..jpg)
-### 1.2 HOẠT ĐỘNG 
+#### **1. Preprocessor (Tiền xử lý)** 
+Command: `gcc -E main.c -o main.i`
 
-   ***1. Giai đoạn tiền xử lý - Preprocessor***
+- Các file trong source code (ví dụ: `a.c`, `a.h`, `b.h`, `b.c`, `main.c`,…) sẽ được hợp nhất thành một file duy nhất: `main.i`.
+- Giai đoạn này thực hiện:
+  - Copy toàn bộ nội dung của các file thư viện (`#include <stdio.h>`, `#include "hello.h"`,…).
+  - Thay thế các nội dung được định nghĩa bởi `#define`.
+  - Xóa toàn bộ chú thích, giữ lại khai báo biến và hàm.
 
-    - Nhận mã nguồn.
-    - Xóa bỏ chú thích, comments của chướng trình.
-    - Chỉ thị tiền xử lý(bắt đầu bằng dấu #) cũng được xử lý.
-    - Gộp các file .c, .h ... thành 1 file .i .
-    - Giữ lại các biến và hàm.
-    - Dùng lệnh: gcc -E main.c -o main.i 
-   
-   Ví dụ: 
-   ![Quá trình tiền xử lý](pre.jpg)
-   Giải thích: Nội dung của thư viện stdio.h và nội dung của file Test.c sẽ được copy vào file Test1.i, 
-   các macro define sẽ được thay thế và giữ lại các biến và hàm.
+#### **2. Compiler**
+- File `main.i` được biên dịch thành file `main.s` (ngôn ngữ assembly).
+  
+  ![Compiler output](image-1.png)
 
-   ***2. Compiler (Giai đoạn dịch NNBC sang ngôn ngữ Assembly):***
+#### **3. Assembler**
+- Biên dịch mã assembly trong file `main.s` thành ngôn ngữ máy, tạo file đối tượng: `main.o`.
 
-    - Quá trình này compiler sẽ biên dịch từ file .i sang file ngôn ngữ assembly là file .s
-    - Dùng lệnh gcc -S main.i -o main.s
-   ***3. Assembler (Giai đoạn dịch ngôn ngữ Assembly sang ngôn ngữ máy):*** 
+#### **4. Linker**
+- Liên kết một hoặc nhiều file `.o` thành file thực thi (`.exe`).
 
-    -   Compiler sẽ Biên dịch ngôn ngữ Assembly sang ngôn ngữ máy (0 và 1). Và tạo ra tệp tin Object .o
-    -   Dùng lệnh gcc -c main.s -o main.o để tạo ra file .o
-   ***4. Linker (Giải đoạn liên kết):***
+---
 
-    -   1 hoặc nhiều file.o sẽ được compiler liên kết lại 1 File .exe.
-    -   File này để hệ điều hành chạy
-    -   Dùng lệnh gcc main.o -o filename để tạo ra tệp thực thi .
+## II. MACRO  
+### 1. Định nghĩa  
 
-## II. MACRO
-### 1. ĐỊNH NGHĨA 
+Trong ngôn ngữ lập trình C, **macro** là một cơ chế giúp định nghĩa một khối mã nguồn có thể tái sử dụng nhiều lần trong chương trình. Macro được khai báo bằng chỉ thị `#define`. Khi biên dịch, trình tiền xử lý sẽ thay thế các macro bằng nội dung mà chúng định nghĩa trước khi mã nguồn được biên dịch.
 
-    Trong ngôn ngữ lập trình C, macro là một cách để định nghĩa một khối mã nguồn mà có thể được sử dụng 
-    nhiều lần trong chương trình. Macro được xác định bằng cụm từ #define trong C. Khi chương trình được
-    biên dịch, macro sẽ được thay thế bằng nội dung mà nó định nghĩa, trước khi mã nguồn được biên dịch.
+Macro trong C bao gồm:  
+1. **Chỉ thị bao hàm tệp** (`#include`)  
+2. **Chỉ thị định nghĩa** (`#define`)  
+3. **Chỉ thị biên dịch có điều kiện** (`#ifdef`, `#ifndef`, ...)  
 
-    Macro trong C gồm: 1. Chỉ thị bao hàm tệp
-                       2. Chỉ thị định nghĩa
-                       3. Chỉ thị biên dịc có điều kiện
-                        ......
+---
 
-#### 1.1 Chỉ thị bao hàm tệp 
+### 1. Chỉ thị bao hàm tệp  
 
-    Trong ngôn ngữ lập trình C, chỉ thị để bao hàm một tệp vào một
-    chương trình là chỉ thị tiền xử lý #include. Chỉ thị này cho 
-    phép bạn bao gồm nội dung của một tệp header vào trong mã nguồn
-    của bạn trước khi chương trình được biên dịch.
+Trong C, chỉ thị bao hàm tệp (`#include`) được sử dụng để đưa nội dung của một tệp header vào chương trình trước khi biên dịch.
 
-    1. Bao hàm tệp header bằng <>: 
+#### 1.1 Bao hàm tệp header bằng `<>`  
 
-        Khi bạn sử dụng #include <header.h>, trình biên dịch sẽ tìm
-        kiếm tệp header trong các thư mục chuẩn của hệ thống. 
-        Ví dụ: #include <stdio.h>, #include <math.h> ...
-    2. Bao hàm tệp header bằng "":
-   
-        Khi bạn sử dụng #include "header.h", trình biên dịch sẽ tìm 
-        kiếm tệp header trong cùng thư mục với tệp mã nguồn hiện tại 
-        trước khi tìm trong các thư mục khác. Điều này thường được 
-        sử dụng cho các tệp header do người dùng tạo ra hoặc tùy chỉnh.
-        Ví dụ: #include "myheader.h", ....
-#### 1.2 Chỉ thị định nghĩa macro
-
-    Chỉ thị #define được sử dụng để định nghĩa macro. 
--   Định nghĩa một hằng số
--   Định nghĩa một chuỗi
--   Định nghĩa hàm (chú ý dấu \ sau mỗi dòngdòng)
-    ......
-
+Khi sử dụng `#include <header.h>`, trình biên dịch sẽ tìm kiếm tệp header trong các thư mục hệ thống chuẩn.  
+Ví dụ:  
 ```c
-#include<stdio.h>
-#include"Test2.c"
+#include <stdio.h>
+#include <math.h>
+```
+#### 1.2 Bao hàm tệp header bằng `""`
+Khi sử dụng #include "header.h", trình biên dịch sẽ tìm kiếm tệp header trong cùng thư mục với tệp mã nguồn hiện tại trước khi tìm trong các thư mục khác.
+Điều này thường áp dụng cho các tệp header do người dùng tự tạo.
+Vis dụ:
+```c
+#include"myheader.h"
+#include"Hello.hh"
+```
 
-#define PI 3.14     //Dinh nghia 1 hang so
-#define SIZE 20     //Dinh nghia 1 so
-#define CHUOI "Hello World"         //Dinh nghia 1 chuoi
+### 2. Chỉ thị định nghĩa macro  
 
-// Dinh nghia 1 ham
+Chỉ thị `#define` trong ngôn ngữ lập trình C có thể được sử dụng để định nghĩa nhiều loại giá trị và cấu trúc khác nhau. 
+
+Khi sử dụng chỉ thị `#define` để định nghĩa một macro, tất cả các chỗ trong mã nguồn sử dụng macro đó sẽ được thay thế trong quá trình tiền xử lý bằng nội dung mà chúng ta đã định nghĩa.
+
+#### 2.1 Định nghĩa hằng số  
+
+Macro thường được sử dụng để định nghĩa các giá trị hằng.
+Ví dụ:  
+```c
+#define PI 3.14159
+#define MAX_SIZE 100
+```
+#### 2.2 Định nghĩa chuỗi
+Macro cũng có thể định nghĩa một chuỗi để có thể sử dụng nhiều lần trong chương trình.
+Ví dụ:
+```c
+#define HELLO "Hello World"
+#define MYNAME "Viet Trong"
+```
+#### 2.3 Định nghĩa một hàm
+Macro cũng có thể định nghĩa một hàm.
+Chú ý dùng dấu `\` khi để nối các đoạn mã trong macro nhiều dòng.
+```c
 #define FUNC(name, cmd) \
 void name(){            \
     printf("cmd");      \
 }
 
 FUNC(Test11, "My name is Trong");
-
 ```
-Trong đoạn code này: 
-- Định nghĩa các hằng số PI, SIZE, và chuỗi CHUOI sử dụng #define.
-- Sử dụng macro FUNC để định nghĩa một hàm với tên và nội dung được truyền vào như tham số.
+#### 2.4 Chỉ thị hủy định nghĩa một macro  
 
-#### 1.3 Chỉ thi hủy định nghĩa một macro
+Nếu muốn hủy bỏ hoặc loại bỏ định nghĩa của một macro trong mã nguồn, bạn có thể dùng chỉ thị `#undef`.  
 
-    Khi bạn sử dụng chỉ thị #define, bạn tạo ra một macro mà trình biên dịch sẽ thay thế tất
-    cả các trường hợp của macro đó trong mã nguồncủa bạn bằng nội dung mà bạn đã định nghĩa. 
-    Khi bạn muốn loại bỏhoặc hủy bỏ định nghĩa của một macro, bạn có thể sử dụng chỉ thị #undef.
-
+Ví dụ:  
 ```c
 #include <stdio.h>
 
 #define PI 3.14159  // Định nghĩa macro PI
 
 int main() {
-    printf("Value of PI: %f\n", PI);  // Sử dụng macro PI
-
+    printf("Giá trị của PI: %.22f\n", PI);  // Sử dụng macro PI
     #undef PI  // Hủy định nghĩa macro PI
-    #define PI 55 // Định nghĩa lại macro PI
-    printf("Value of PI after undef: %f\n", PI);// PI hiện tại bằng 5
-
+    #define PI 55  // Định nghĩa lại macro PI
+    printf("Giá trị hiện tại là: %.22f\n", PI);  // PI hiện tại bằng 55
     return 0;
 }
 ```
-Trong đoạn code trên:
-- Chúng ta định nghĩa macro PI với giá trị ban đầu là 3.14159.
-- Sau đó, chúng ta sử dụng macro PI để in ra giá trị của PI.
-- Tiếp theo, chúng ta hủy định nghĩa của macro PI bằng #undef và định nghĩa lại nó với giá trị 55.
-- Cuối cùng, chúng ta in ra giá trị mới của PI sau khi định nghĩa lại, là 55.
-
-#### 1.4 Chỉ thị biên dịch có điều kiện
-
-    -  #ifdef và #ifndef: Kiểm tra xem một macro đã được định nghĩa hay chưa.
-    -  #ifdef MACRO: Kiểm tra xem macro MACRO đã được định nghĩa hay chưa.
-    -  #ifndef MACRO: Kiểm tra xem macro MACRO chưa được định nghĩa.
-  
-***Ví dụ sử dụng #ifdef và #endif:***
+Output:
 
 ```c
-#include <stdio.h>
-
-#define PI 3.14  // Định nghĩa macro PI
-
-int main() {
-    #ifdef PI
-        printf("PI = 3.14\n");
-    #endif
-
-    return 0;
-}
+Giá trị của PI: 3.14
+Giá trị hiện tại là: 55.00
 ```
-Trong ví dụ trên:
-- Macro PI được định nghĩa với giá trị 3.14.
-- Sử dụng #ifdef để kiểm tra xem macro PI có được định nghĩa hay không. 
-Nếu có, dòng "PI = 3.14 " sẽ được in ra.
-- Chương trình sẽ kết thúc sau khi in ra thông báo và trả về giá trị 0.
-- 
-***Ví dụ sử dụng #ifdef và #endif:***
-
-```c
-#include <stdio.h>
-
-#ifndef PI
-#define PI 3.14159
-#endif
-
-int main() {
-    printf("The value of PI is: %f\n", PI);
-
-    return 0;
-}
-
-```
-Chỉ thị #ifndef PI kiểm tra xem macro PI đã được định nghĩa hay chưa. Nếu PI 
-chưa được định nghĩa, khối mã trong #ifndef sẽ được thực thi và macro PI sẽ 
-được định nghĩa với giá trị là 3.14 .
 
 
-2. #if, #elif, #else, #endif: Thực hiện biên dịch dựa trên giá trị của các biểu thức.
 
-    -   #if condition: Biên dịch nếu điều kiện là đúng.
-    -   #elif condition: Biên dịch nếu điều kiện trước đó sai và điều kiện hiện tại đúng.
-    -   #else: Biên dịch nếu tất cả các điều kiện trước đó đều sai.
-    -   #endif: Kết thúc một khối điều kiện.
 
-***Ví dụ sử dụng #if, #elif, #else, #endif***
 
+
+### 3. Chỉ thị biên dịch có điều kiện
+#### 3.1 `#if`, `#elif`, `#else`, `#endif` 
+
+**`#if`** được sử dụng để bắt đầu một điều kiện tiền xử lý.  
+- Nếu điều kiện trong `#if` là đúng, các dòng mã nguồn sau `#if` sẽ được biên dịch.  
+- Nếu điều kiện sai, sẽ xét các điều kiện tiếp theo **`#elif`** tiếp theo nếu cócó.
+
+**`#elif`** được sử dụng để thêm một điều kiện mới khi điều kiện trước đó trong `#if` hoặc `#elif` là sai.  
+- Nếu điều kiện trong `#elif` là đúng, các dòng mã nguồn sau `#elif` sẽ được biên dịch.  
+- Nếu điều kiện sai, quá trình kiểm tra sẽ tiếp tục đến các chỉ thị `#elif` hoặc `#else` tiếp theo.
+
+**`#else`** dùng khi không có điều kiện nào ở trên đúng.  
+
+**`#endif`** dùng để kết thúc.
+Ví dụ:
 ```c
 #include <stdio.h>
 
@@ -208,98 +158,167 @@ int main(int argc, char const *argv[])
     while (1)
     {
         #if MCU == STM32
-            printf("STM32\n");
-        
+            printf("STM32");
         #elif MCU == ESP32
-            printf("ESP32\n");
-        
-        #elif MCU == ATmega
-            printf("ATmega\n");
-
+            printf("ESP32");
         #else 
-            printf("Unknown MCU\n");
-
-        #endi
+            printf("0");
+        #endif
     }
     return 0;
 }
-```
-Trong đoạn code trên:
-- Các macromacro ESP32, STM32 và ATmega được định nghĩa.
-- Macro MCU được đặt là STM32.
-- Trong vòng lặp while, chúng ta sử dụng các điều kiện #if, #elif, và #else để in ra tên của 
-vi điều khiển tương ứng với giá trị của MCU.
-- Cuối cùng, chúng ta sử dụng #endif để kết thúc các điều kiện tiền xử lý.
-#### 1.5 Variadic macro
-    Variadic macros trong ngôn ngữ lập trình C cho phép bạn định nghĩa cácmacro có số lượng
-    tham số biến đổi. Điều này có nghĩa là số lượng tham số của macro có thể thay đổi khi được
-    sử dụng. Để định nghĩa một macro biến tham số, bạn sử dụng ... để chỉ ra số lượng tham số 
-    có thể biến đổi.
+``` 
+#### 3.2 `#ifef` và `#ifndef`.
+
+ **`#ifdef`**
+   - Dùng để kiểm tra xem một macro đã được định nghĩa hay chưa.
+   - Nếu macro đã được định nghĩa trước đó, mã nguồn sau chỉ thị `#ifdef` sẽ được biên dịch.
+   - Thường được sử dụng khi bạn muốn mã nguồn chỉ được biên dịch khi một macro đã được định nghĩa.
+
+**`#ifndef`** (If Not Defined):
+   - Dùng để kiểm tra xem một macro có **chưa** được định nghĩa.
+   - Nếu macro chưa được định nghĩa trước đó, mã nguồn sau chỉ thị `#ifndef` sẽ được biên dịch.
+   - Thường được sử dụng khi muốn tránh việc định nghĩa lại một macro, ví dụ như trong các file header.
 
 
+**Ví dụ với `#ifdef`:**
 ```c
 #include <stdio.h>
 
-#define NUMBER(...) printf(__VA_ARGS__)
+#define DEBUG
 
 int main() {
-    NUMBER("Value of x: %d, y: %f\n", 10, 3.14);
+    #ifdef DEBUG
+        printf("Debug mode is enabled.\n");
+    #endif
+
     return 0;
 }
 ```
-Trong ví dụ trên: 
--   Macro NUMBER được định nghĩa với tham số biến đổi ....
--   Bên trong macro, chúng ta sử dụng __VA_ARGS__ để truy cập đến các tham số được truyền vào macro.
--   Khi chúng ta sử dụng macro NUMBER với các đối số khác nhau, nó sẽ in ra các giá trị tương ứng một cách linh hoạt.
+###### Giải thích:
+- Ở đây, macro **DEBUG** được định nghĩa trước.
+-  Chỉ thị **#ifdef DEBUG** kiểm tra xem macro **DEBUG** đã được định nghĩa chưa. Vì đã được định nghĩa, 
+  phần mã trong khối **#ifdef** sẽ được biên dịch và in ra "Debug mode is enabled."
+
+
+**Ví dụ với `#ifnndef`:**
+
+**FFile `config.h`**.
+
+```c
+#ifndef CONFIG_H  // Kiểm tra xem CONFIG_H đã được định nghĩa chưa
+#define CONFIG_H  // Định nghĩa CONFIG_H nếu chưa được định nghĩa
+
+// Nội dung của file header
+void print_message();
+
+#endif  // Kết thúc chỉ thị 
+
+```
+
+**File `main.c`**.
+
+```c
+#include <stdio.h>
+#include "config.h"  // Bao gồm file header config.h
+
+void print_message() {
+    printf("Hello World.\n");
+}
+
+int main() {
+    print_message();  // Gọi hàm từ config.h
+    return 0;
+}
+
+```
+
+##### Giải thích:
+- Chỉ thị **#ifndef CONFIG_H:** Kiểm tra xem macro **CONFIG_H** đã được định nghĩa chưa.
+  - Nếu **CONFIG_H** chưa được định nghĩa, mã trong khối **#ifndef** sẽ được biên dịch, và macro **CONFIG_H** sẽ được
+ định nghĩa.
+  - Nếu **CONFIG_H** đã được định nghĩa rồi (ví dụ: trong các lần bao gồm file header khác), mã trong khối **#ifndef** sẽ không được biên dịch nữa, ngăn chặn việc định nghĩa lại macro và các hàm trong file header này.
+
+**Tại sao sử dụng #ifndef:**
+Tránh định nghĩa lại: Nếu file header config.h được bao gồm nhiều lần trong các file khác nhau, chỉ thị #ifndef giúp đảm bảo rằng nội dung trong file này chỉ được biên dịch một lần, tránh tình trạng lỗi khi macro và hàm bị định nghĩa lại.
+
+
+
+#### 3. Phân biệt chỉ thị biên dịch có điều kiện và câu lệnh có điều kiện.
+| **Tiêu chí**                | **Chỉ thị biên dịch có điều kiện**            | **Câu lệnh điều kiện**                     |
+|-----------------------------|----------------------------------------------|-------------------------------------------|
+| **Thời điểm xử lý**          | **Trước khi biên dịch** (tiền xử lý)         | **Khi chương trình chạy** (runtime)       |
+| **Mục đích**                 | Quyết định phần mã nào sẽ được biên dịch    | Quyết định phần mã nào sẽ được thực thi   |
+| **Câu lệnh**                 | `#if`, `#ifdef`, `#ifndef`, `#else`, `#endif` | `if`, `else if`, `else`                   |
+| **Điều kiện**                | Biểu thức phải là hằng số xác định trước khi biên dịch | Điều kiện có thể là bất kỳ biểu thức nào có giá trị tại runtime |
+
+
+#### 4.Variadic Macro trong C
+Variadic macros là một tính năng trong ngôn ngữ lập trình C cho phép bạn định nghĩa một macro với số lượng tham số thay đổi. Điều này có nghĩa là số lượng tham số truyền vào macro có thể thay đổi mỗi khi bạn sử dụng macro đó.
+
+**Cách định nghĩa Variadic Macro:**
+Để định nghĩa một variadic macro, bạn sử dụng ba dấu chấm ... trong định nghĩa của macro, thay cho số lượng tham số cụ thể. Bên trong macro, bạn có thể sử dụng __VA_ARGS__ để đại diện cho các tham số được truyền vào.
+
+**Cách sử dụng Variadic Macro:**
+**...:** Được dùng để chỉ ra rằng macro có thể nhận một số lượng tham số thay đổi.
+__VA_ARGS__: Dùng để truy cập tất cả các tham số được truyền vào trong macro.
 
 </details>
 
 <details>
 <summary>LESSON 2: STDARG - ASSERT</summary>
 
-## THƯ VIỆN STDARG
-    Thư viện stdarg.h trong ngôn ngữ lập trình C cung cấp chức năng để làm
-    việc với các hàm có số lượng đối số biến đổi.Trong stdarg.h, có các cấu
-    trúc quan trọng như va_list, va_start, va_arg, và va_end: 
-    -   va_list: Đây là một kiểu dữ liệu để lưu trữ các tham số biến đổi.
-    -   va_start: Hàm này được sử dụng để khởi tạo va_list và thiết lập con trỏ đến tham số đầu tiên.
-    -   va_arg: Hàm này được sử dụng để truy xuất các tham số tiếp theo trong danh sách tham số biến đổi.
-    -   va_end: Hàm này được sử dụng để kết thúc việc truy cập các tham số biến đổi.
+## 1.Thư viện `stdarg.h`
 
-```C
+Thư viện `stdarg.h` trong ngôn ngữ lập trình C cung cấp các công cụ để làm việc với các hàm có số lượng đối số biến đổi. Thư viện này bao gồm một số cấu trúc và hàm quan trọng sau:
+
+- **`va_list`**: Đây là kiểu dữ liệu dùng để lưu trữ các tham số biến đổi trong một hàm.
+- **`va_start`**: Hàm này được sử dụng để khởi tạo `va_list` và thiết lập con trỏ đến tham số đầu tiên trong danh sách tham số biến đổi.
+- **`va_arg`**: Hàm này được dùng để truy xuất các tham số tiếp theo trong danh sách tham số biến đổi.
+- **`va_end`**: Hàm này được sử dụng để kết thúc việc truy cập các tham số biến đổi, giúp giải phóng bộ nhớ và tránh rò rỉ bộ nhớ.
+
+Những hàm và cấu trúc này giúp bạn làm việc với các hàm có số lượng tham số không xác định (biến đổi), như các hàm in ra màn hình (`printf`, `fprintf`).
+
+
+**Ví dụ 1:**
+```c
 #include <stdio.h>
 #include <stdarg.h>
 
-int sum(int count, ...) {
+#define tong(...) sum(__VA_ARGS__, 0)
+
+int sum(int count,...)
+{
     va_list args;
+
     va_start(args, count);
 
-    int total = 0;
-    for (int i = 0; i < count; i++) {
-        total += va_arg(args, int);
+    int result = count; // bắt đầu tính tổng từ count
+    int value;
+
+    while((value = va_arg(args, int)) != 0)
+    {
+        result += value;
     }
 
     va_end(args);
 
-    return total;
+    return result;
 }
 
-int main() {
-    int result1 = sum(3, 10, 20, 30);
-    int result2 = sum(5, 1, 2, 3, 4, 5);
-
-    printf("Sum 1: %d\n", result1);
-    printf("Sum 2: %d\n", result2);
-
+int main(int argc, char const *argv[])
+{
+    printf("Tong = %d\n", tong(3, 2, 4, 5, 7)); // sum(3, 2, 4, 5, 7, 0)
     return 0;
 }
-```
 
-Trong ví dụ này:
--   Hàm sum nhận một số nguyên đầu tiên (count) để xác định số lượng đối số tiếp -  theo cần tính tổng.
+```
+**Giải thích:**
+- Hàm sum nhận một số nguyên đầu tiên (count) để xác định số lượng đối số tiếp -  theo cần tính tổng.
 -   Trong hàm sum, chúng ta sử dụng va_list, va_start và va_arg để truy cập các đối số biến đổi và tính tổng của chúng.
 -   Cuối cùng, chúng ta gọi hàm sum với số lượng đối số khác nhau và in ra kết quả.
 
+**Ví dụ 2:**
 ```C
 #include <stdio.h>
 #include <stdarg.h>
@@ -336,6 +355,7 @@ Trong ví dụ này ta sử dụng một các tối ưu hơn là:
 - Định nghĩa macro ***#define tong(...)  sum(VA_ARGS, 0)*** để gọi hàm sum với các tham số mà macro tong nhận được và thêm một số 0 vào cuối danh sách tham số.
 ***Nhược điểm***: Vòng lặp tính tổng sẽ dừng nếu gặp số 0, mà sẽ không xét đến các số tiếp theo nếu có.
 
+**Ví dụ 3:**
 ```c
 #include <stdio.h>
 #include <stdarg.h>
@@ -386,7 +406,7 @@ sẽ trỏ tới một số.)
 -   Trong vòng lặp while, kiểm tra điều kiện dừng bằng cách so sánh giá trị của tham số hiện tại 
 trong danh sách (va_arg(check, char*)) với ký tự '\n'. Khi gặp ký tự '\n', vòng lặp sẽ dừng.
 
-## THƯ VIỆN ASSERT
+## 2. THƯ VIỆN ASSERT
 - Dùng để phát hiện lỗi, debug chương trình, thể hiện lỗi cụ thể trong code.
 - Nếu điều kiện đúng (true), chương trình được thực thi.
 - Nếu điều kiện sai (false), chương trình báo lỗi và sẽ sừng lại.
@@ -422,7 +442,18 @@ int main() {
 }
 ```
 Trong đoạn code trên biến x không bằng 1010 nên trương trình sẽ gặp lỗi và dừng lại.
-***output: Assertion failed: x == 88, file D:\LEARN\CODE_C\ADVANCE_C_Cpp\stdarg.c, line 6***
+output: Assertion failed: x == 88, file D:\LEARN\CODE_C\ADVANCE_C_Cpp\stdarg.c, line 6
+
+
+
+
+
+
+
+
+
+
+
 
 
 </details>
@@ -486,6 +517,7 @@ int main()
 ```
 
 Output:
+
     a = 5, b = 9
 
     a&b = 1
@@ -622,4 +654,3 @@ feature selected: 0
 feature selected: 0
 feature selected: 0
 ```
-
