@@ -668,7 +668,7 @@ feature selected: 0
 # Pointer
 
 - Trong ngôn ngữ lập trình C, con trỏ (pointer) là một biến chứa địa chỉ bộ nhớ của một đối tượng khác (biến, mảng, hàm). Việc sử dụng con trỏ giúp chúng ta thực hiện các thao tác trên bộ nhớ một cách linh hoạt hơn. Con trỏ cho phép chúng ta làm việc trực tiếp với bộ nhớ, thực hiện các thao tác như truy xuất và thay đổi giá trị của các biến thông qua địa chỉ bộ nhớ của chúng.
-- Cú pháp khai báo: **type* pointer_name;**
+- Cú pháp khai báo: **`type* pointer_name`**
   
 **Ví dụ:**
 ```c
@@ -687,7 +687,9 @@ int main() {
 
 ```
 ## Kích thước của con trỏ
-    Kích thước của con trỏ phụ thuộc vào hệ điều hành và kiến trúc của máy tính (32-bit hay 64-bit), nhưng nó thường là 4 byte trên hệ 32-bit và 8 byte trên hệ 64-bit.Để kiểm tr kích thuớc của con trỏ ta có thể sử dụng toán tử `sizeof`.
+    Kích thước của con trỏ phụ thuộc vào hệ điều hành và kiến trúc của máy tính (32-bit hay 64-bit),
+    nhưng nó thường là 4 byte trên hệ 32-bit và 8 byte trên hệ 64-bit.Để kiểm tr kích thuớc của con
+    trỏ ta có thể sử dụng toán tử `sizeof`.
  
  ##### Ví dụ:
  ```c
@@ -795,7 +797,9 @@ int main() {
 
 ```
 ##### Giải thích:
-Chương trình sử dụng con trỏ kiểu void để trỏ tới các kiểu dữ liệu khác nhau (như int, double, char, và hàm). Con trỏ void không có kiểu dữ liệu xác định, vì vậy cần phải ép kiểu con trỏ về kiểu cụ thể (như int*, double*, char*, hoặc int (*)(int, int) cho hàm) để truy cập giá trị.
+Chương trình sử dụng con trỏ kiểu void để trỏ tới các kiểu dữ liệu khác nhau (như int, double, char, và hàm).
+Con trỏ void không có kiểu dữ liệu xác định, vì vậy cần phải ép kiểu con trỏ về kiểu cụ thể (như int*, double*, char*,
+hoặc int (*)(int, int) cho hàm) để truy cập giá trị.
 ##### Output:
 ```
 value is: 5
@@ -911,8 +915,10 @@ int main()
 ```
 **Giải thích:**
 ```
--   tinhtoan(tong, a, b) gọi hàm tong, tức là phép cộng. Tương tự, truyền hieu và tich để thực hiện phép trừ và phép nhân.
--   Mỗi lần gọi tinhtoan, hành vi của chương trình thay đổi tùy thuộc vào hàm  truyền vào như tong, hieu, hoặc tich.
+-   tinhtoan(tong, a, b) gọi hàm tong, tức là phép cộng. Tương tự, truyền hieu và tich 
+để thực hiện phép trừ và phép nhân.
+-   Mỗi lần gọi tinhtoan, hành vi của chương trình thay đổi tùy thuộc vào hàm  truyền 
+vào như tong, hieu, hoặc tich.
 
 ```
 **Lợi ích:** có thể thay đổi mục đích của chương trình mà không cần sửa mã trong hàm tinhtoan, chỉ cần thay đổi con trỏ hàm mà bạn truyền vào.
