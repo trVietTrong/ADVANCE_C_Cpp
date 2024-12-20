@@ -653,3 +653,444 @@ feature selected: 0
 feature selected: 0
 feature selected: 0
 ```
+
+
+
+
+
+
+<!-- </details>
+
+
+<details>
+<summary>LESSON 4: POINTER</summary>  -->
+
+# Pointer
+
+- Trong ngôn ngữ lập trình C, con trỏ (pointer) là một biến chứa địa chỉ bộ nhớ của một đối tượng khác (biến, mảng, hàm). Việc sử dụng con trỏ giúp chúng ta thực hiện các thao tác trên bộ nhớ một cách linh hoạt hơn. Con trỏ cho phép chúng ta làm việc trực tiếp với bộ nhớ, thực hiện các thao tác như truy xuất và thay đổi giá trị của các biến thông qua địa chỉ bộ nhớ của chúng.
+- Cú pháp khai báo: **type* pointer_name;**
+  
+**Ví dụ:**
+```c
+#include <stdio.h>
+
+int main() {
+    int x = 10;
+    int* ptr = &x;  // ptr là con trỏ lưu địa chỉ của biến x
+
+    printf("Địa chỉ của x: %p\n", (void*)&x);  // In ra địa chỉ của x
+    printf("Giá trị của ptr: %p\n", (void*)ptr);  // In ra giá trị của ptr (địa chỉ của x)
+    printf("Giá trị mà ptr trỏ tới: %d\n", *ptr);  // In ra giá trị của x thông qua con trỏ
+
+    return 0;
+}
+
+```
+## Kích thước của con trỏ
+    Kích thước của con trỏ phụ thuộc vào hệ điều hành và kiến trúc của máy tính (32-bit hay 64-bit), nhưng nó thường là 4 byte trên hệ 32-bit và 8 byte trên hệ 64-bit.Để kiểm tr kích thuớc của con trỏ ta có thể sử dụng toán tử `sizeof`.
+ 
+ ##### Ví dụ:
+ ```c
+
+#include <stdio.h>
+
+int main() {
+    int x = 10;
+    int* ptr = &x;
+
+    // Kiểm tra kích thước của con trỏ ptr
+    printf("Kích thước của con trỏ ptr: %d byte\n", sizeof(ptr));
+
+    // Kiểm tra kích thước của kiểu dữ liệu mà con trỏ trỏ tới (int)
+    printf("Kích thước của kiểu dữ liệu int: %d byte\n", sizeof(int));
+
+    return 0;
+}
+
+ ```
+##### Output:
+```
+Kích thước của con trỏ ptr: 8 byte
+Kích thước của kiểu dữ liệu int: 4 byte
+```
+
+### Ứng dụng của con trỏ
+```c
+#include <stdio.h>
+void swap(int *a, int *b)
+{
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+int main()
+{
+   int a = 10, b = 20;
+   swap(&a, &b);
+
+   printf("value a is: %d\n", a);
+   printf("value b is: %d\n", b);
+
+    return 0;
+}
+
+```
+**Giải thích:**
+-   Đầu vào của hàm: Hàm **swap** nhận hai đối số là con trỏ int *a và int *b. 
+-   Chúng ta truyền vào địa chỉ của biến a và b cho hàm swap bằng cách sử dụng toán tử **&** (toán tử lấy địa chỉ). 
+-   *a và *b trong hàm **swap** là toán tử **dereferencing** dùng để truy cập và thay đổi giá trị tại địa chỉ mà con trỏ a và b trỏ tới.
+
+
+
+###  1. Void Pointer
+Void pointer thường dùng để trỏ để tới bất kỳ địa chỉ nào mà không cần biết tới kiểu dữ liệu của giá trị tại địa chỉ đó.
+Cú pháp: **`void *ptr_void`**
+
+**Cách sử dụng:** khi ta sử dụng con trỏ kiểu void trong C để trỏ tới một biến có kiểu dữ liệu cụ thể (như int), ta cần phải ép kiểu con trỏ void về con trỏ có kiểu cụ thể (ví dụ: int* ). Sau đó, ta mới có thể giải tham chiếu (dereference) con trỏ để đọc giá trị của biến mà nó trỏ tới.
+
+**Ví dụ:** 
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int sum(int a, int b)
+{
+    return a+b;
+}
+
+int main() {
+   
+    char array[] = "Hello";
+    int value = 5;
+    double test = 15.7;
+    char letter = 'A';
+   
+    //Con trỏ void trỏ tới int:
+    void *ptr = &value;
+    printf("value is: %d\n", *(int*)(ptr));
+
+    //Con trỏ void trỏ tới double:
+    ptr = &test;
+    printf("value is: %f\n", *(double*)(ptr));
+
+    //Con trỏ void trỏ tới char:
+    ptr = &letter;
+    printf("value is: %c\n", *(char*)(ptr));
+
+    //Con trỏ void trỏ tới hàm sum:
+    ptr = sum;
+    printf("sum: %d\n", ((int (*)(int,int))ptr)(5,6));
+
+    //Mảng con trỏ void để lưu nhiều kiểu dữ liệuliệu
+    void *ptr1[] = {&value, &test, &letter , sum, array};
+
+    //Truy cập các phần tử trong mảng con trỏ ptr1:
+    printf("value: %d\n", *(int*)ptr1[0]);
+
+    //CCộng thêm 1 với con trỏ là để trỏ tới ký tự tiếp theo trong chuỗi "Hello", tức là 'e'.
+    printf("value: %c\n", *((char*)ptr1[4]+1));
+
+    return 0;
+}
+
+```
+##### Giải thích:
+Chương trình sử dụng con trỏ kiểu void để trỏ tới các kiểu dữ liệu khác nhau (như int, double, char, và hàm). Con trỏ void không có kiểu dữ liệu xác định, vì vậy cần phải ép kiểu con trỏ về kiểu cụ thể (như int*, double*, char*, hoặc int (*)(int, int) cho hàm) để truy cập giá trị.
+##### Output:
+```
+value is: 5
+value is: 15.700000
+value is: A
+sum: 11
+value: 5
+value: e
+
+```
+
+### 2. Funcion Pointer
+-   Pointer to function (con trỏ hàm) là một biến mà giữ địa chỉ của một hàm. Có nghĩa là, nó trỏ đến vùng nhớ trong bộ nhớ chứa mã máy của hàm được định nghĩa trong chương trình.
+-    Trong ngôn ngữ lập trình C, con trỏ hàm cho phép bạn truyền một hàm như là một đối số cho một hàm khác, lưu trữ địa chỉ của hàm trong một cấu trúc dữ liệu, hoặc thậm chí truyền hàm như một giá trị trả về từ một hàm khác.
+-   **Cú pháp:**<return_type> (* func_pointer)(<data_type_1>, <data_type_2>);
+
+#### 2.1 Sử dụng con trỏ hàm để gọi các phép toán.
+
+```c
+#include <stdio.h>
+
+void tong(int a, int b)
+{
+    printf("%d + %d = %d\n", a, b, a + b);
+}
+
+void hieu(int a, int b)
+{
+    printf("%d - %d = %d\n", a, b, a - b);
+}
+
+void tich(int a, int b)
+{
+    printf("%d * %d = %d\n", a, b, a * b);
+}
+
+int main(int argc, char const *argv[])
+{
+    int a = 5, b = 3;
+
+    void(*ptr)(int, int);  // Khai báo con trỏ hàm
+
+    // Trỏ đến hàm tong 
+    ptr = tong;            
+    ptr(a, b);        // gọi hàm tong thông qua con trỏ
+
+    // Trỏ đến hàm hieu 
+    ptr = hieu;           
+    ptr(a, b);       // gọi hàm hieu thông qua con trỏ
+
+    // Trỏ đến hàm tich 
+    ptr = tich;           
+    ptr(a, b);       // gọi hàm tich thông qua con trỏ  
+
+    return 0;
+}
+
+```
+
+**Output:**
+```
+5 + 3 = 8
+5 - 3 = 2
+5 * 3 = 15
+```
+
+
+#### 2.2 Sử dụng con trỏ làm tham số của một hàm
+```c
+#include <stdio.h>
+
+void tong(int a, int b)
+{
+    printf("%d + %d = %d\n", a, b, a + b);
+}
+
+void hieu(int a, int b)
+{
+    printf("%d - %d = %d\n", a, b, a - b);
+}
+
+void tich(int a, int b)
+{
+    printf("%d * %d = %d\n", a, b, a * b);
+}
+
+/* Cách 2: Sử dụng con trỏ hàm làm tham số của 1 hàm */
+void tinhtoan(void(*pheptoan)(int, int), int a, int b)
+{
+    pheptoan(a, b);  // Gọi phép toán thông qua con trỏ hàm
+}
+
+int main()
+{
+    int a = 6, b = 2;
+
+    // Gọi hàm tinhtoan với con trỏ hàm trỏ tới các phép toán khác nhau
+    tinhtoan(tong, a, b);  // Truyền con trỏ hàm tong vào
+    tinhtoan(hieu, a, b);  // Truyền con trỏ hàm hieu vào
+    tinhtoan(tich, a, b);  // Truyền con trỏ hàm tich vào
+
+    return 0;
+}
+
+```
+
+**Output:**
+```
+6 + 2 = 8
+6 - 2 = 4
+6 * 2 = 12
+
+```
+**Giải thích:**
+```
+-   tinhtoan(tong, a, b) gọi hàm tong, tức là phép cộng. Tương tự, truyền hieu và tich để thực hiện phép trừ và phép nhân.
+-   Mỗi lần gọi tinhtoan, hành vi của chương trình thay đổi tùy thuộc vào hàm  truyền vào như tong, hieu, hoặc tich.
+
+```
+**Lợi ích:** có thể thay đổi mục đích của chương trình mà không cần sửa mã trong hàm tinhtoan, chỉ cần thay đổi con trỏ hàm mà bạn truyền vào.
+
+
+#### 2.3 Sử dụng mảng con trỏ hàm để gọi các phép toán
+
+```c
+#include <stdio.h>
+
+void tong(int a, int b) {
+    printf("%d + %d = %d\n", a, b, a + b);
+}
+
+void hieu(int a, int b) {
+    printf("%d - %d = %d\n", a, b, a - b);
+}
+
+void tich(int a, int b) {
+    printf("%d * %d = %d\n", a, b, a * b);
+}
+
+int main() {
+    int a = 6, b = 2;
+
+    // Khai báo mảng con trỏ hàm
+    void (*pheptoan[])(int, int) = {tong, hieu, tich};
+
+    // Gọi các hàm thông qua mảng con trỏ hàm
+    pheptoan[0](a, b);  // Gọi hàm `tong`
+    pheptoan[1](a, b);  // Gọi hàm `hieu`
+    pheptoan[2](a, b);  // Gọi hàm `tich`
+
+    return 0;
+}
+```
+**Output**
+```
+6 + 2 = 8
+6 - 2 = 4
+6 * 2 = 12
+
+```
+**Giải thích:**
+- pheptoan[]: Là một mảng chứa các con trỏ hàm.
+- void (*)(int, int): Đây là kiểu của các phần tử trong mảng — mỗi phần tử là một con trỏ trỏ tới một hàm có kiểu trả về void và nhận hai tham số kiểu int.
+- {tong, hieu, tich}: Gán địa chỉ các hàm tong, hieu, và tich vào các phần tử của mảng.
+
+
+ **Lợi ích:** Tất cả các hàm liên quan (như các phép toán) được nhóm lại trong một mảng, dễ quản lý hơn.
+
+
+### 3. Pointer to Constant
+Một con trỏ kiểu "Pointer to Constant" chỉ cho phép đọc giá trị mà nó trỏ tới, không được phép thay đổi giá trị đó thông qua con trỏ.
+**Cú pháp:**
+```c
+int const *ptr_const; 
+const int *ptr_const;
+```
+**Ví dụ:**
+```c
+#include <stdio.h>
+
+int main() {
+    int num = 5;
+    const int* ptr = &num; // Con trỏ chỉ đọc giá trị
+    num = 6; // Hợp lệ, thay đổi trực tiếp giá trị của biến
+    *ptr = 7; // Lỗi, không được phép thay đổi thông qua con trỏ
+
+    return 0;
+}
+```
+
+### 4. Constant Pointer
+Định nghĩa một con trỏ mà giá trị nó trỏ đến (địa chỉ ) không thể thay đổi. Tức là khi con trỏ này được khởi tạo thì nó sẽ không thể trỏ tới địa chỉ khác.
+**Cú pháp:** 
+```c
+int *const const_ptr = &value;
+```
+**Ví dụ:**
+```c
+#include <stdio.h>
+
+int main() {
+    int num1 = 10, num2 = 20;
+    int *const ptr = &num1; // Con trỏ cố định trỏ tới num1
+    *ptr = 15; // Hợp lệ, thay đổi giá trị của num1
+    ptr = &num2; // Lỗi, không thể thay đổi địa chỉ mà con trỏ trỏ tới
+
+    return 0;
+}
+```
+
+### 5. NULL Pointer
+Null Pointer là một con trỏ không trỏ đến bất kỳ đối tượng hoặc vùng nhớ cụ thể nào. Trong ngôn ngữ lập trình C, một con trỏ có thể được gán giá trị NULL để biểu diễn trạng thái null. 
+
+Sử dụng null pointer thường hữu ích để kiểm tra xem một con trỏ đã được khởi tạo và có trỏ đến một vùng nhớ hợp lệ chưa. Tránh dereferencing (sử dụng giá trị mà con trỏ trỏ đến) một null pointer là quan trọng để tránh lỗi chương trình.
+
+**Ví dụ:**
+```c
+#include <stdio.h>
+
+int main() {
+    int *ptr = NULL;  // Gán giá trị NULL cho con trỏ 0x0000000
+
+    if (ptr == NULL) {
+        printf("Pointer is NULL\n");
+    } else {
+        printf("Pointer is not NULL\n");
+    }
+
+    int score_game = 5;
+    if (ptr == NULL)
+    {
+        ptr = &score_game;
+        *ptr = 30;
+        ptr = NULL;
+    }
+    
+
+    return 0;
+}
+```
+**Giải thích:**
+```
+-   Khi ptr == NULL, chương trình gán địa chỉ của biến score_game cho ptr.
+-   Dòng *ptr = 30; thay đổi giá trị của score_game từ 5 thành 30 thông qua con trỏ.
+-   Sau khi hoàn tất, con trỏ ptr được gán lại giá trị NULL để đánh dấu rằng nó không còn trỏ tới bất kỳ vùng nhớ hợp lệ nào.
+```
+
+### 6. Pointer to Pointer
+Con trỏ đến con trỏ (Pointer to Pointer) là một kiểu dữ liệu trong ngôn ngữ lập trình cho phép bạn lưu trữ địa chỉ của một con trỏ. Con trỏ đến con trỏ cung cấp một cấp bậc trỏ mới, cho phép bạn thay đổi giá trị của con trỏ gốc. Cấp bậc này có thể hữu ích trong nhiều tình huống, đặc biệt là khi bạn làm việc với các hàm cần thay đổi giá trị của con trỏ.
+
+**Ví dụ:**
+```c
+#include <stdio.h>
+
+int main() {
+    int value = 42;
+    int *ptr1 = &value;  // Con trỏ thường trỏ đến một biến
+
+    int **ptr2 = &ptr1;  // Con trỏ đến con trỏ
+
+    /*
+        **ptr2 = &ptr1
+        ptr2 = &ptr1;
+        *ptr2 = ptr1 = &value;
+        **ptr2 = *ptr1 = value
+    */
+
+    printf("address of value: %p\n", &value);
+    printf("value of ptr1: %p\n", ptr1);
+
+    printf("address of ptr1: %p\n", &ptr1);
+    printf("value of ptr2: %p\n", ptr2);
+
+    printf("dereference ptr2 first time: %p\n", *ptr2);
+
+    printf("dereference ptr2 second time: %d\n", **ptr2);
+
+    return 0;
+}
+```
+**Giải thích:**
+```
+-   ptr2 lưu địa chỉ của ptr1, tức là ptr2 = &ptr1.
+-   *ptr2 trỏ đến giá trị của ptr1, tức là *ptr2 = ptr1 = &value.
+-   **ptr2 trỏ đến giá trị mà ptr1 trỏ tới, tức là **ptr2 = *ptr1 = value = 42.-
+```
+**Output:**
+```cc
+address of value: 0x7ffee4b3e7cc
+value of ptr1: 0x7ffee4b3e7cc
+
+address of ptr1: 0x7ffee4b3e7d0
+value of ptr2: 0x7ffee4b3e7d0
+
+dereference ptr2 first time: 0x7ffee4b3e7cc
+dereference ptr2 second time: 42
+
+```
