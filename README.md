@@ -24,7 +24,6 @@ Command: `gcc -E main.c -o main.i`
 #### **2. Compiler**
 - File `main.i` được biên dịch thành file `main.s` (ngôn ngữ assembly).
   
-  ![Compiler output](image-1.png)
 
 #### **3. Assembler**
 - Biên dịch mã assembly trong file `main.s` thành ngôn ngữ máy, tạo file đối tượng: `main.o`.
@@ -110,10 +109,10 @@ Ví dụ:
 #define PI 3.14159  // Định nghĩa macro PI
 
 int main() {
-    printf("Giá trị của PI: %.22f\n", PI);  // Sử dụng macro PI
+    printf("Giá trị của PI: %.2f\n", PI);  // Sử dụng macro PI
     #undef PI  // Hủy định nghĩa macro PI
     #define PI 55  // Định nghĩa lại macro PI
-    printf("Giá trị hiện tại là: %.22f\n", PI);  // PI hiện tại bằng 55
+    printf("Giá trị hiện tại là: %.2f\n", PI);  // PI hiện tại bằng 55
     return 0;
 }
 ```
@@ -203,7 +202,7 @@ int main() {
 
 **Ví dụ với `#ifnndef`:**
 
-**FFile `config.h`**.
+**File `config.h`**.
 
 ```c
 #ifndef CONFIG_H  // Kiểm tra xem CONFIG_H đã được định nghĩa chưa
@@ -244,7 +243,7 @@ Tránh định nghĩa lại: Nếu file header config.h được bao gồm nhi�
 
 
 
-#### 3. Phân biệt chỉ thị biên dịch có điều kiện và câu lệnh có điều kiện.
+#### 3.3 Phân biệt chỉ thị biên dịch có điều kiện và câu lệnh có điều kiện.
 | **Tiêu chí**                | **Chỉ thị biên dịch có điều kiện**            | **Câu lệnh điều kiện**                     |
 |-----------------------------|----------------------------------------------|-------------------------------------------|
 | **Thời điểm xử lý**          | **Trước khi biên dịch** (tiền xử lý)         | **Khi chương trình chạy** (runtime)       |
