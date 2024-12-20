@@ -10,7 +10,7 @@
 - Compiler là quá trình chuyển đổi ngôn ngữ bậc cao sang ngôn ngữ máy.
 - Gồm 4 giai đoạn chính:
   
-  ![Compiler stages](image.png)
+  ![Compiler stages](compiler1..jpg)
 
 #### **1. Preprocessor (Tiền xử lý)** 
 Command: `gcc -E main.c -o main.i`
