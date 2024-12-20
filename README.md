@@ -659,11 +659,11 @@ feature selected: 0
 
 
 
-<!-- </details>
+</details>
 
 
 <details>
-<summary>LESSON 4: POINTER</summary>  -->
+<summary>LESSON 4: POINTER</summary> 
 
 # Pointer
 
