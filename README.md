@@ -1089,7 +1089,7 @@ int main() {
 -   **ptr2 trỏ đến giá trị mà ptr1 trỏ tới, tức là **ptr2 = *ptr1 = value = 42.-
 ```
 **Output:**
-```cc
+```c
 address of value: 0x7ffee4b3e7cc
 value of ptr1: 0x7ffee4b3e7cc
 
@@ -1100,3 +1100,458 @@ dereference ptr2 first time: 0x7ffee4b3e7cc
 dereference ptr2 second time: 42
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</details>
+
+
+<details>
+<summary>LESSON 5: Storage ClassesClasses</summary> 
+
+## Extern 
+Trong ngôn ngữ lập trình C, từ khóa extern được sử dụng để khai báo một biến hoặc hàm được định nghĩa ở một nơi khác (thường là trong một tệp khác) và có phạm vi sử dụng trên
+toàn chương trình.
+
+### 1. Sử dụng Extern với biến.
+Khi một biến được khai báo bằng extern, nó không được cấp phát bộ nhớ tại vị trí khai
+báo đó. Thay vào đó, bộ nhớ sẽ được cấp phát tại nơi biến được định nghĩa.
+
+**Ví dụ:**
+-   File `file1.c` dùng để định nghĩa biến.
+```c
+#include<stdio.h>
+
+int x = 10;   // Biến được định nghĩa và cấp phát địa chỉchỉ
+
+```
+-   File `file2.c` dùng để sử dụng biến.
+```c
+
+#include <stdio.h>
+
+extern int x; // Khai báo extern biến x để có thể sử dụng 
+
+void printX() {
+    printf("x = %d\n", x);
+}
+
+int main()
+{
+    printX();
+}
+
+```
+-   Khi biên dịch, cần phải liên kết các tệp lại với nhau:
+```
+gcc file1.c file2.c -o outtputfile
+```
+
+### 2. Sử dụng Extern với hàm.
+**Cách sử dụng Extern với hàm:**
+-   Khai báo trong tệp tiêu đề (.h): sử dụng extern để khai báo rằng một hàm được định nghĩa ở một nơi khác.
+-   Định nghĩa hàm trong tệp nguồn (.c): định nghĩa logic của hàm trong một file .c. Không cần sử dụng extern khi định nghĩa hàm.
+-   Gọi hàm từ một file khác: Bao gồm tệp tiêu đề hoặc khai báo extern trực tiếp trong file cần gọi hàm.
+
+**Ví dụ:**
+-   File `file1.h` dùng để khai báo:
+```c
+#ifndef FILE1_H
+#define FILE1_H
+
+extern int tinhTong(int a, int b);  // Khai báo extern cho hàm
+extern int tinhHieu(int a, int b);
+
+#endif
+
+```
+
+-   File `file2.c` dùng để định nghĩa:
+```c
+#include"file1.h"
+
+int tinhTong(int a, int b){
+    return a + b;
+}
+int tinhHieu(int a, int b){
+    return a - b;
+}
+
+```
+-   file `main.c` tệp chính:
+```c
+#include<stdio.h>
+#include<file1.h>
+
+int main(){
+    int x = 10, y = 5;
+
+    printf("Add: %d\n", tinhTong(x, y));        
+    printf("Subtract: %d\n", tinhHieu(x, y));
+
+    return 0;
+}
+```
+
+-   Liên kết các file:
+```c
+gcc main.c file2.c -o main.exe 
+```
+-   Outout:
+```c
+Add: 15
+Subtract: 5
+```
+
+### 3. Ứng dụng của Extern trong thực tế.
+Giả sử chúng ta cần chia sẻ dữ liệu nhiệt độ động cơ từ cảm biến với nhiều module khác trong hệ thống.
+
+-   File `engine_data.h` khai báo các biến hàm sử dụng trong module khác:
+```c
+#ifndef ENGINE_DATA_H
+#define ENGINE_DATA_H
+
+extern float engine_temperature;        //Khai báo extern cho cảm biến nhiệt độ
+extern void updateEngineTemperature(float new_temp)  // Khai báo extern cho hàmhàm
+```
+
+-   file `sensor_module.c` đọc cảm biến và cập nhật giá trị của nhiệt độ:
+```c
+#include "engine_data"
+
+float engine_temperature = 0.0;     // Định nghĩa biến nhiệt độ
+
+void updateEngineTemperature (float new_temp){
+    engine_temperature = new_temp;      // Cập nhật giá trị nhiệt độ từ cảm biến 
+}
+
+void readSensor(){
+    float temp = 85.5;          // Giá trị giả lập từ cảm biếnbiến
+    updateTemperature(temp);
+}
+
+```
+
+**Giải thích:**
+   Hàm readSensor() mô phỏng việc đọc cảm biến và cập nhật giá trị nhiệt độ cho biến engine_temperature thông qua hàm updateEngineTemperature().
+
+-   File `diagnostic_module.c` chẩn đoán:
+```c
+#include <stdio.h>
+#include "engine_data.h"
+
+void checkEngine(){
+    if(engine_temperature > 100.0){
+        printf("WARNING: Engine Overheating! Temperature = %.2f\n", engine_temperature);
+    }
+    else
+        printf("Engine temperature : %.2f\n , engine_temperature);
+}
+```
+**Giải thích:**
+Hàm checkEngineStatus() in ra trạng thái của động cơ, cho biết nhiệt độ hiện tại hoặc thông báo cảnh báo nếu động cơ quá nóng.
+
+-   File `main.c`
+
+```c
+#include "engine_data.h"
+
+extern void readSensor();  // Khai báo extern cho hàm ở file khác
+extern void checkEngineStatus(); // Khai báo extern cho hàm ở file khác
+
+int main() {
+    readSensor();          // Đọc giá trị cảm biến
+    checkEngineStatus();   // Kiểm tra trạng thái động cơ
+    return 0;
+}
+```
+**Giải thích:**
+Hàm main() gọi lần lượt readSensor() để cập nhật giá trị nhiệt độ và checkEngineStatus() để kiểm tra trạng thái động cơ.
+
+-   Biên dịch chương trình:
+```c
+gcc main.c sensor_module.c diagnostic_module.c -o system
+```
+
+-   Output:
+```c
+Engine Temperature: 85.50
+```
+
+## Static local
+Biến static local là một biến được khai báo với từ khóa static trong phạm vi cục bộ của 
+một hàm. Biến này có một số đặc điểm sau:
+**Đặc điểm của biến static local.**
+1. Lưu trữ trong bộ nhớ tĩnh:
+    -   Biến static local không được lưu trong stack(ngăn xếp) như các biến cục bộ thông thường, mà được lưu trong vùng bộ nhớ tĩnh(static memori).
+    -   Điều này giúp biến không bị thu hồi sau khi hàm kết thúc, giá trị của biến sẽ được bảo tồn trong các lần gọi hàm.
+2. Khởi tạo một lần duy nhất:
+   -   Biến static local được khởi tạo chỉ một lần duy nhất khi chương trình chạy đến lần đầu tiên sử dụng hàm chứa biến đó.
+   -   Các lần gọi hàm tiếp theo sẽ sử dụng giá trị đã lưu của biến từ lần gọi trước, thay vì khởi tạo lại.
+3. Phạm vi:
+   -   Biến static local chỉ có thể được truy cập bên trong hàm mà nó được khai báo. Nó không thể được truy cập từ bên ngoài hàm đó.
+4. Thời gian tồn tại:
+    -   Biến static local tồn tại trong toàn bộ thời gian chạy của chương trình, ngay cả khi hàm chứa nó đã kết thúc.
+
+**Ví dụ:**
+```c
+#include <stdio.h>
+
+void counter() {
+    static int count = 0; // Biến static local, được khởi tạo một lần duy nhất
+    count++;
+    printf("Count: %d\n", count);
+}
+
+int main() {
+    counter(); // In ra: Count: 1
+    counter(); // In ra: Count: 2
+    counter(); // In ra: Count: 3
+    return 0;
+}
+```
+**Phân tích:**
+Biến `counter` là biến static local:
+-   Nó được khởi tạo 1 lần duy nhất với giá trị bằng 0.
+-   Mỗi lần gọi hàm `counter`, giá trị của biến sẽ được tăng lên và giữ nguyên giá trị giữa các lần gọi hàm.
+
+**So sánh với biến cục bộ thông thường:**
+```c
+#include <stdio.h>
+
+void counter() {
+    int count = 0; // Biến cục bộ thông thường
+    count++;
+    printf("Count: %d\n", count);
+}
+
+int main() {
+    counter(); // In ra: Count: 1
+    counter(); // In ra: Count: 1
+    counter(); // In ra: Count: 1
+    return 0;
+}
+```
+**Phân tích:**
+Biến `counter` trong ví dụ này là biến cục bộ thông thường, sau khi hàm kết thúc vùng bộ nhớ cấp phát cho biến sẽ bị thu hồi lại và không còn tồn tại nữa. Lần tiếp theo khi hàm được gọi vùng bộ nhớ mới sẽ được cấp phát cho nó và giá trị của biến sẽ được cập nhật lại.
+
+
+## Static global.
+Trong C, biến static global là một biến toàn cục (global) được khai báo với từ khóa static. Nó có một số đặc điểm khác biệt so với biến toàn cục thông thường.
+
+1.  Phạm vi:
+    -   Biến static global chỉ có thể được truy cập trong file mà nó được khai báo.
+    -   Nó không thể xuất hiện bên ngoài file ngay cả khi dùng từ khóa `extern` trong file khác .
+2. Thời gian tồn tại:
+    -   Biến static global tồn tại trong toàn bộ thời gian chạy của chương trình, giống như biến toàn cục thông thường.
+3. Khởi tạo mặc định:
+    -   Nếu không được khởi tạo rõ ràng, biến static global sẽ tự động được khởi tạo với giá trị mặc định:
+        - Số nguyên (int) → 0
+        -   Số thực (float) → 0.0
+        -   Con trỏ → NULL
+4. Giới hạn truy cập:
+    -   Từ khóa static trong khai báo toàn cục được sử dụng để giới hạn phạm vi của biến trong file nguồn hiện tại, tránh xung đột tên với các biến toàn cục khác trong những file khác.
+
+**Ví dụ:**
+
+-   File `file1.c`
+```c
+#include<stdio.h>
+
+
+static int staticGlobalVar = 40;    // Khai báo biến toàn cục static
+int normalGlobalVar = 50;           // khai báo biến toàn cục thông thường
+
+void printStaticGlobalVar(){
+    printf("Global Var (file1) : %d\n", staticGlobalVar);       // In giá trị của biến toàn cục static
+}
+```
+
+-   File `file2.c`
+```c
+#include <stdio.h>
+
+// Khai báo extern cho biến toàn cục thông thường (được phép truy cập)
+extern int normalGlobalVar;
+
+// extern int staticGlobalVar; // Không hợp lệ, sẽ gây lỗi biên dịch
+
+void printNormalGlobalVar() {
+    printf("normalGlobalVar (file2.c): %d\n", normalGlobalVar);
+}
+```
+-   File `main.c`
+```c
+#include <stdio.h>
+
+// Khai báo các hàm từ file1.c và file2.c
+void printStaticGlobalVar();
+void printNormalGlobalVar();
+
+int main() {
+    printf("=== Program Start ===\n");
+
+    // Gọi hàm in giá trị của biến static toàn cục
+    printStaticGlobalVar();
+    printNormalGlobalVar();
+
+    return 0;
+}
+
+```
+-   Liên kết file: 
+```c
+gcc main.c file1.c file2.c -o program
+```
+
+-   Output:
+```c
+=== Program Start ===
+staticGlobalVar (file1.c): 40
+normalGlobalVar (file2.c): 50
+```
+
+### So sánh biến toàn cục static và biến toàn cục thông thường.
+| Đặc điểm             | Biến toàn cục thông thường        | Biến `static` global            |
+|----------------------|-----------------------------------|---------------------------------|
+| **Phạm vi truy cập**  | Truy cập từ bất kỳ file nào bằng `extern` | Chỉ truy cập trong file khai báo |
+| **Thời gian tồn tại** | Toàn bộ thời gian chạy chương trình | Toàn bộ thời gian chạy chương trình |
+| **Khả năng xung đột** | Có thể bị xung đột khi trùng tên biến | Không thể bị xung đột với file khác |
+
+
+## Biến Register 
+Trong C, biến register là một từ khóa được sử dụng để chỉ ra rằng một biến nên được lưu trữ trong thanh ghi (register) của vi xử lý thay vì trong bộ nhớ RAM thông thường. Điều này có thể giúp tăng tốc độ truy xuất biến, vì thanh ghi có tốc độ truy cập nhanh hơn bộ nhớ.
+
+**Đặc điểm:**
+1.  Biến được khai báo với từ khóa `register` được lưu trữ trong thanh ghi của CPU, giúp cải thiện hiệu suất khi truy xuất dữ liệu.(Lưu ý trình biên dịch có thể không chọn thanh ghi nếu không đủ tài nguyên).
+2.  Không thể lấy địa chỉ của biến`register` vì thanh ghi không có địa chỉ cụ thể như Ram.
+3.  Chỉ áp dụng với biến cục bộ.
+4.  Tăng hiệu suất.
+
+**Ví dụ 1: Sử dụng biến thông thường.**
+```c
+#include <stdio.h>
+#include <time.h>
+
+int main() {
+    clock_t start, end;
+    double cpu_time_used;
+
+    // Bắt đầu đo thời gian
+    start = clock();
+
+    // Vòng lặp cần đo thời gian
+    int sum = 0;
+    for (int i = 0; i < 1000000; i++) {
+        sum += i;
+    }
+
+    // Kết thúc đo thời gian
+    end = clock();
+
+    // Tính toán thời gian CPU đã sử dụng
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+    // In kết quả
+    printf("Vòng lặp mất %f giây\n", cpu_time_used);
+    return 0;
+}
+```
+
+**OutPut:**
+```c
+Vòng lặp mất 0.000300 giây
+```
+
+**Ví dụ 2: Sử dụng biến register.**
+```c
+#include <stdio.h>
+#include <time.h>
+
+int main() {
+    clock_t start, end;
+    double cpu_time_used;
+
+    // Bắt đầu đo thời gian
+    start = clock();
+
+    // Vòng lặp sử dụng biến register
+    register int sum = 0;
+    register int i;
+    for (i = 0; i < 1000000; i++) {
+        sum += i;
+    }
+
+    // Kết thúc đo thời gian
+    end = clock();
+
+    // Tính toán thời gian CPU đã sử dụng
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+    // In kết quả
+    printf("Vòng lặp mất %f giây\n", cpu_time_used);
+    return 0;
+}
+
+```
+
+**OutPut:**
+```c
+Vòng lặp mất 0.000100 giây
+```
+
+**Giải thích:**
+-   clock_t start, end;: Định nghĩa hai biến start và end kiểu clock_t, dùng để lưu thời gian bắt
+ đầu và kết thúc của vòng lặp.
+
+-   start = clock();: Lưu thời gian bắt đầu khi vòng lặp bắt đầu thực thi.
+
+-   end = clock();: Lưu thời gian kết thúc khi vòng lặp kết thúc.
+
+-   cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;: Tính toán thời gian sử dụng của CPU
+ bằng cách lấy hiệu giữa end và start và chia cho CLOCKS_PER_SEC để chuyển từ "ticks" sang giây.
+
+-   printf("Vòng lặp mất %f giây\n", cpu_time_used);: In ra thời gian thực thi của vòng lặp.
+
+**Kết luận:**
+Sử dụng biến register trong vòng lặp có thể giúp cải thiện hiệu suất khi truy cập biến, nhưng hiệu
+ quả thực tế phụ thuộc vào nhiều yếu tố như bộ biên dịch, kiến trúc phần cứng và cách sử dụng biến.
+
+## Biến volatile
+Trong C, từ khóa volatile là một từ khóa đặc biệt được sử dụng để chỉ ra rằng giá trị của một biến có thể thay đổi bất kỳ lúc nào mà không có sự can thiệp trực tiếp từ chương trình (ví dụ như thay đổi bởi phần cứng, ngắt hoặc các tác vụ khác đang chạy song song). Điều này cảnh báo trình biên dịch không tối ưu hóa các phép truy xuất và lưu trữ giá trị của biến đó.
+
+```c
+#include "stm32f10x.h"  // Header cho STM32F103
+
+volatile uint8_t interrupt_flag = 0;  // Biến volatile để báo hiệu khi ngắt xảy ra
+
+// Hàm xử lý ngắt cho GPIO Pin 0, Port B
+void EXTI0_IRQHandler(void) {
+    if (EXTI->PR & EXTI_PR_PR0) {  // Kiểm tra nếu ngắt đến từ GPIO Pin 0 (PB0)
+        interrupt_flag = 1;  // Đặt cờ ngắt thành 1
+        EXTI->PR = EXTI_PR_PR0;  // Xóa cờ ngắt để chuẩn bị cho lần ngắt sau
+    }
+}
+
+```
+
+**Kết luận:**
+`volatile` là từ khóa quan trọng trong C để làm việc với các biến có thể thay đổi bất ngờ, chẳng hạn như do phần cứng, ngắt, hoặc đa nhiệm.
+Sử dụng volatile giúp tránh việc tối ưu hóa biến mà trình biên dịch có thể thực hiện, đảm bảo rằng giá trị của biến luôn được đọc trực tiếp từ bộ nhớ khi cần thiết.
