@@ -1,8 +1,8 @@
 # Advance_C_Cpp
 ## Contents
 
-<details>
-<summary>LESSON 1: COMPILER - MACRO</summary>
+<!-- <details>
+<summary>LESSON 1: COMPILER - MACRO</summary> -->
 
 ---
 
@@ -262,10 +262,10 @@ Variadic macros là một tính năng trong ngôn ngữ lập trình C cho phép
 **...:** Được dùng để chỉ ra rằng macro có thể nhận một số lượng tham số thay đổi.
 __VA_ARGS__: Dùng để truy cập tất cả các tham số được truyền vào trong macro.
 
-</details>
+<!-- </details>
 
 <details>
-<summary>LESSON 2: STDARG - ASSERT</summary>
+<summary>LESSON 2: STDARG - ASSERT</summary> -->
 
 ## 1.Thư viện `stdarg.h`
 
@@ -455,11 +455,11 @@ output: Assertion failed: x == 88, file D:\LEARN\CODE_C\ADVANCE_C_Cpp\stdarg.c, 
 
 
 
-</details>
 
+<!-- </details>
 
 <details>
-<summary>LESSON 3: BITMASK </summary> 
+<summary>LESSON 3: BITMASK </summary>  -->
 
 ## Bit mask
 - Bitmask là một kỹ thuật sử dụng các bit để lưu trữ và thao tác với các cờ (flags) hoặc trạng thái. Có thể sử dụng bitmask để đặt, xóa và kiểm tra trạng thái của các bit cụ thể trong một từ (word).
@@ -659,11 +659,11 @@ feature selected: 0
 
 
 
-</details>
 
 
+<!-- </details>
 <details>
-<summary>LESSON 4: POINTER</summary> 
+<summary>LESSON 4: POINTER</summary>  -->
 
 # Pointer
 
@@ -1120,11 +1120,11 @@ dereference ptr2 second time: 42
 
 
 
-</details>
+<!-- </details>
 
 
 <details>
-<summary>LESSON 5: Storage ClassesClasses</summary> 
+<summary>LESSON 5: Storage ClassesClasses</summary>  -->
 
 ## Extern 
 Trong ngôn ngữ lập trình C, từ khóa extern được sử dụng để khai báo một biến hoặc hàm được định nghĩa ở một nơi khác (thường là trong một tệp khác) và có phạm vi sử dụng trên
@@ -1555,3 +1555,239 @@ void EXTI0_IRQHandler(void) {
 **Kết luận:**
 `volatile` là từ khóa quan trọng trong C để làm việc với các biến có thể thay đổi bất ngờ, chẳng hạn như do phần cứng, ngắt, hoặc đa nhiệm.
 Sử dụng volatile giúp tránh việc tối ưu hóa biến mà trình biên dịch có thể thực hiện, đảm bảo rằng giá trị của biến luôn được đọc trực tiếp từ bộ nhớ khi cần thiết.
+
+
+
+
+
+
+<!-- </details>
+
+
+<details>
+<summary>LESSON 6: STRUCT - UNION </summary>  -->
+
+
+
+
+
+
+## STRUCT 
+Struct là  một kiểu dữ liệu người dùng định nghĩa, cho phép nhóm nhiều biến (còn gọi là trường) có kiểu dữ liệu khác nhau thành một thực thể logic duy nhất. Điều này giúp tổ chức dữ liệu tốt hơn, đặc biệt khi làm việc với các tập hợp dữ liệu phức tạp.
+
+### 1. Cách khai báo
+**Cách 1:**
+```c
+struct TênCấuTrúc {
+    kiểu_dữ_liệu trường1;
+    kiểu_dữ_liệu trường2;
+    // Các trường khác
+};
+```
+
+**Cách 2: sử dụng `typedef`**
+```c
+typedef struct {
+    kiểu_dữ_liệu trường1;
+    kiểu_dữ_liệu trường2;
+} TênCấuTrúc;
+
+```
+### 2. Truy xuất dữ liệu
+**Truy xuất với dữ liệu thường: Ta sử dụng dấu `.`:**
+**Ví dụ:**
+```c
+#include <stdio.h>
+
+// Định nghĩa struct
+struct SinhVien {
+    char ten[50];
+    int tuoi;
+    float diemTB;
+};
+
+int main() {
+    struct SinhVien sv;
+
+    // Gán giá trị
+    printf("Nhap ten: ");
+    fgets(sv.ten, sizeof(sv.ten), stdin);
+
+    printf("Nhap tuoi: ");
+    scanf("%d", &sv.tuoi);
+
+    printf("Nhap diem trung binh: ");
+    scanf("%f", &sv.diemTB);
+
+    // Truy xuất dữ liệu
+    printf("\nThong tin sinh vien:\n");
+    printf("Ten: %s", sv.ten);
+    printf("Tuoi: %d\n", sv.tuoi);
+    printf("Diem TB: %.2f\n", sv.diemTB);
+
+    return 0;
+}
+
+```
+**Truy xuất với con trỏ: Ta sử dụng dấu `->`:**
+**Ví dụ:**
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+// Định nghĩa kiểu struct với cú pháp của bạn
+typedef struct {
+    char ten[50];
+    int tuoi;
+    float diemTB;
+} SinhVien *sv1;
+
+int main() {
+    // Khai báo một biến kiểu sv1 và cấp phát bộ nhớ
+    sv1 sv = (sv1)malloc(sizeof(*sv)); // Cấp phát bộ nhớ cho con trỏ sv
+
+    if (sv == NULL) {
+        printf("Khong the cap phat bo nho.\n");
+        return 1;
+    }
+
+    // Nhập thông tin cho sinh viên qua con trỏ
+    printf("Nhap ten: ");
+    fgets(sv->ten, sizeof(sv->ten), stdin);
+
+    printf("Nhap tuoi: ");
+    scanf("%d", &sv->tuoi);
+
+    printf("Nhap diem trung binh: ");
+    scanf("%f", &sv->diemTB);
+
+    // Hiển thị thông tin
+    printf("\nThong tin sinh vien:\n");
+    printf("Ten: %s", sv->ten);
+    printf("Tuoi: %d\n", sv->tuoi);
+    printf("Diem TB: %.2f\n", sv->diemTB);
+
+    // Giải phóng bộ nhớ
+    free(sv);
+
+    return 0;
+}
+
+```
+
+### 3. Data align trong struct:
+Data alignment trong struct của C là cách trình biên dịch sắp xếp các thành phần 
+của struct trong bộ nhớ sao cho tối ưu hóa truy cập dữ liệu, đồng thời tuân theo
+các quy tắc về canh chỉnh (alignment rules) của phần cứng.
+**Ví dụ:**
+```c
+#include <stdio.h>
+
+typedef struct {
+    char a;   // 1 byte
+    int b;    // 4 bytes
+    short c;  // 2 bytes
+} MyStruct;
+
+int main() {
+    printf("Size of struct: %lu bytes\n", sizeof(MyStruct));
+    return 0;
+}
+
+```
+**Output:**
+```c
+Size of struct: 12 bytes
+```
+**Giải thích:**
+-   Trường `char a`:
+    -   char chiếm 1 byte.
+    -   biến char chiếm vị trí đầu tiên trong 4 byte được cấp phát.
+    -   Trống 3 byte.
+-   Trường int b:
+
+    -   int chiếm 4 bytes.
+    -   Vì int phải nằm ở vị trí chia hết cho 4 nên sẽ được cấp phát thêm 4 byte để lưu biến int.
+    -   Padding 3 vị trí còn thừa sau lần cấp phát đầu tiên để đảm vị trí cuả biến int.
+-   Trường short c:
+
+    -   short chiếm 2 bytes.
+    -   short thường cần canh chỉnh tại một địa chỉ là bội số của 2.
+    -   Vì sau b (chiếm 4 bytes), không cần thêm padding để đảm bảo rằng c bắt đầu tại một địa chỉ chia hết cho 2.
+    -   Padding 2 byte còn lại. 
+
+**Kết Luận: Tổng là 12 byte**
+| Thành phần | Kích thước | Địa chỉ     | Giải thích                                   |
+|------------|------------|-------------|---------------------------------------------|
+| a          | 1 byte     | 0           | Được lưu tại địa chỉ 0                      |
+| padding    | 3 bytes    | 1-3         | Padding để canh chỉnh `b` tại địa chỉ 4     |
+| b          | 4 bytes    | 4-7         | Được lưu tại địa chỉ 4                      |
+| c          | 2 bytes    | 8-9         | Được lưu tại địa chỉ 8                      |
+| padding    | 2 bytes    | 10-11       | Padding để đảm bảo tổng kích thước là bội số của 4 |
+
+### 4. Ứng dụng của struct
+**Ví dụ: Trong lập trình vi điều khiển**
+```c
+#include "stm32f10x.h"  // Thư viện STM32F1
+
+// Định nghĩa cấu trúc cho GPIO
+typedef struct {
+    volatile uint32_t CRL;     
+    volatile uint32_t CRH;    
+    volatile uint32_t IDR;     
+    volatile uint32_t ODR;     
+    volatile uint32_t BSRR;    
+    volatile uint32_t BRR;     // 0x18: GPIO port configuration lock register
+} GPIO_TypeDef;
+
+// Địa chỉ của GPIOA trong STM32F103C8T6
+#define GPIOA ((GPIO_TypeDef *) 0x40010800)
+
+void delay_ms(int ms) {
+    int i, j;
+    for (i = 0; i < ms; i++) {
+        for (j = 0; j < 1000; j++) {
+            // Delay đơn giản
+        }
+    }
+}
+
+int main(void) {
+    // Bật clock cho GPIOA
+    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
+
+    // Cấu hình GPIOA pin 5 như một output
+    GPIOA->CRL &= ~(0xF << (5 * 4));  // Xóa cấu hình cũ của pin 5
+    GPIOA->CRL |= (0x01 << (5 * 4));  // Cấu hình pin 5 là output 
+    while (1) {
+        // Bật LED (set pin 5 HIGH)
+        GPIOA->ODR |= (1 << 5);  // Đặt trạng thái của pin 5 là HIGH (LED bật)
+
+        delay_ms(500);  // Delay 500ms
+
+        // Tắt LED (set pin 5 LOW)
+        GPIOA->ODR &= ~(1 << 5);  // Đặt trạng thái của pin 5 là LOW (LED tắt)
+
+        delay_ms(500);  // Delay 500ms
+    }
+
+    return 0;
+}
+```
+
+**Giải thích:**
+-   Cấu trúc GPIO_TypeDef chứa các thanh ghi của cổng GPIO, tương ứng với các thanh ghi điều khiển chân GPIO của STM32F103C8T6. 
+-   Cấu trúc này giúp dễ dàng thao tác với các thanh ghi GPIO qua con trỏ tới cấu trúc.
+
+### 5. Tổng kết đặc điểm của Struct
+-   Tập hợp các kiểu dữ liệu khác nhau
+-   Mỗi thành viên có tên và kiểu riêng
+-   Lưu trữ liên tiếp trong bộ nhớ:
+-   Truy cập các thành viên thông qua dấu chấm (.) hoặc con trỏ (->):
+-   Kích thước của struct:  tổng kích thước của tất cả các thành viên cộng với các byte padding cần thiết
+
+
+
+
+## UNION
+`union` là một kiểu dữ liệu đặc biệt trong C, cho chép lưu trữ nhiwwfu kiểu dữ liệu trong một vùng nhớ. Tuy nhiên, trong một union, chỉ có một giá trị được lưu trữ tại một thời điểm. Kích thước của `union` sẽ bằng kích thước trường lớn nhất trong `union`.
