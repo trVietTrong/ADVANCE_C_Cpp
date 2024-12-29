@@ -1,8 +1,8 @@
 # Advance_C_Cpp
 ## Contents
 
-<!-- <details>
-<summary>LESSON 1: COMPILER - MACRO</summary> -->
+<details>
+<summary>LESSON 1: COMPILER - MACRO</summary>
 
 ---
 
@@ -262,10 +262,10 @@ Variadic macros là một tính năng trong ngôn ngữ lập trình C cho phép
 **...:** Được dùng để chỉ ra rằng macro có thể nhận một số lượng tham số thay đổi.
 __VA_ARGS__: Dùng để truy cập tất cả các tham số được truyền vào trong macro.
 
-<!-- </details>
+</details>
 
 <details>
-<summary>LESSON 2: STDARG - ASSERT</summary> -->
+<summary>LESSON 2: STDARG - ASSERT</summary>
 
 ## 1.Thư viện `stdarg.h`
 
@@ -456,10 +456,10 @@ output: Assertion failed: x == 88, file D:\LEARN\CODE_C\ADVANCE_C_Cpp\stdarg.c, 
 
 
 
-<!-- </details>
+</details>
 
 <details>
-<summary>LESSON 3: BITMASK </summary>  -->
+<summary>LESSON 3: BITMASK </summary> 
 
 ## Bit mask
 - Bitmask là một kỹ thuật sử dụng các bit để lưu trữ và thao tác với các cờ (flags) hoặc trạng thái. Có thể sử dụng bitmask để đặt, xóa và kiểm tra trạng thái của các bit cụ thể trong một từ (word).
@@ -661,9 +661,9 @@ feature selected: 0
 
 
 
-<!-- </details>
+</details>
 <details>
-<summary>LESSON 4: POINTER</summary>  -->
+<summary>LESSON 4: POINTER</summary> 
 
 # Pointer
 
@@ -1120,11 +1120,11 @@ dereference ptr2 second time: 42
 
 
 
-<!-- </details>
+</details>
 
 
 <details>
-<summary>LESSON 5: Storage ClassesClasses</summary>  -->
+<summary>LESSON 5: Storage Classes</summary> 
 
 ## Extern 
 Trong ngôn ngữ lập trình C, từ khóa extern được sử dụng để khai báo một biến hoặc hàm được định nghĩa ở một nơi khác (thường là trong một tệp khác) và có phạm vi sử dụng trên
@@ -1560,12 +1560,11 @@ Sử dụng volatile giúp tránh việc tối ưu hóa biến mà trình biên 
 
 
 
-
-<!-- </details>
+</details>
 
 
 <details>
-<summary>LESSON 6: STRUCT - UNION </summary>  -->
+<summary>LESSON 6: STRUCT - UNION </summary> 
 
 
 
@@ -1790,4 +1789,268 @@ int main(void) {
 
 
 ## UNION
-`union` là một kiểu dữ liệu đặc biệt trong C, cho chép lưu trữ nhiwwfu kiểu dữ liệu trong một vùng nhớ. Tuy nhiên, trong một union, chỉ có một giá trị được lưu trữ tại một thời điểm. Kích thước của `union` sẽ bằng kích thước trường lớn nhất trong `union`.
+`union` là một kiểu dữ liệu đặc biệt trong C, cho chép lưu trữ nhiều kiểu dữ liệu trong một vùng nhớ. Tuy nhiên, trong một union, các trường **chia sẻ cùng một vùng nhớ**. Kích thước của `union` sẽ bằng kích thước trường lớn nhất trong `union`.
+
+**Cú pháp khia báo: Cũng giống như cách khai báo một struct**
+```c 
+typedef union{
+    kieu_du_lieu1 thanh_phan1;
+    kieu_du_lieu2 thanh_phan2;
+    ...
+} TenUnion;
+```
+**Ví dụ:**
+```c
+#include <stdio.h>
+#include<stdint.h>
+
+// Định nghĩa union bằng typedef
+typedef union {
+    uint8_t i;
+    uint16_t f;
+    uint32_t h;
+} Data;
+
+int main() {
+    
+    Data data;
+
+    data.h = 456928226;
+
+    // Vì các thành phần dùng chung bộ nhớ, giá trị sẽ bị ghi đè
+    printf("data.i: %u\n", data.i); 
+    printf("data.f: %u\n", data.f); 
+    printf("data.f: %u\n", data.h); 
+
+    return 0;
+}
+```
+**Output:**
+```c
+data.i: 6
+data.f: 2050
+data.h: 456928226
+```
+**Giải thích:**
+-   Dạng nhị phân của 456928226 là 0001 1011 0110 1111 1111 0100 0010.
+-   `data.i` có kích thuớc 1 byte nên chỉ đọc 8 bit đầu tiên là  `0100 0010` và có giá trị là 66.
+-   `data.f` có kích thuớc 2 byte nên chỉ đọc 16 bit đầu tiên là  `1111 1111 0100 0010 ` và có giá trị là 2050.
+-   `data.h` có kích thuớc 4 byte nên  đọc tất cả các bit  là  `0001 1011 0110 1111 1111 0100 0010 0100 0010` và có giá trị là 456928226 .
+
+
+## Sự giống nhau và khác nhau giữa struct và union.
+**Giống nhau:**
+-   Cùng là kiểu dữ liệu người dùng định nghĩa.
+-   Cùng cách khai báo.
+-   Cùng cách truy cập
+
+**Khác nhau:**
+| **Tiêu chí**         | **Union**                                                                                           | **Struct**                                                                                           |
+|-----------------------|-----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|
+| **Bộ nhớ sử dụng**    | - Các trường (members) chia sẻ cùng một vùng nhớ.                                                   | - Mỗi trường có vùng nhớ riêng, tổng bộ nhớ bằng tổng kích thước của tất cả các trường.               |
+|                       | - Kích thước của union bằng kích thước trường lớn nhất.                                             | - Kích thước của struct bằng tổng kích thước của các trường, có thể có thêm phần căn chỉnh (padding). |
+| **Lưu trữ giá trị**   | - Tại một thời điểm, chỉ một trường có thể lưu trữ giá trị hợp lệ (các trường khác sẽ bị ghi đè).     | - Tất cả các trường đều có thể lưu trữ giá trị đồng thời.                                            |
+| **Mục đích sử dụng**  | - Dùng khi muốn tiết kiệm bộ nhớ và chỉ cần lưu trữ một giá trị tại một thời điểm.                   | - Dùng khi cần lưu trữ nhiều giá trị khác nhau tại cùng một thời điểm.                               |
+| **Truy cập dữ liệu**  | - Khi gán giá trị cho một trường, giá trị của các trường khác có thể bị thay đổi do chia sẻ bộ nhớ. | - Các trường độc lập, giá trị của một trường không ảnh hưởng đến trường khác.                       |
+
+
+
+
+
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<details>
+<summary>LESSON 7: GOTO - SETJMP</summary>
+
+
+
+
+## GOTO
+Câu lệnh `goto` trong ngôn ngữ lập trình C cho phép chương trình nhảy đến một nhãn (label) được định nghĩa trong `cùng một hàm`. Nó cung cấp cơ chế điều khiển luồng chương trình bằng cách bỏ qua các dòng lệnh khác để nhảy trực tiếp đến một đoạn mã cụ thể. (Chú ý: Câu lệnh goto chỉ sử dụng trong phạm vi của một hàm).
+**Cú pháp:**
+```c
+goto label;
+// các câu lệnnh khác
+label:
+// đoạn mã thực thithi
+```
+**Giải thích:**
+1.  `goto label;` : câu lệnh yếu cầu chường trình nhảy đến vị trí của label.
+2.  `label:` : đây là nhãn (label), được định nghĩa như một tên hợp lệ trong C, nó kết thúc bằng dấu `:`.
+
+**Ví dụ 1: Sử dụng trong vòng lặp**
+```c
+#include <stdio.h>
+
+int main() {
+    int i = 0;
+
+    printf("Trước khi nhảy.\n");
+
+    for (i = 0; i < 10; i++) {
+        if (i == 5)
+            goto skip;
+        else
+            printf("%d ", i);
+    }
+
+skip:
+    printf("\nSau khi nhảy.\n");
+
+    return 0;
+}
+
+```
+**Output:**
+```c
+Trước khi nhảy.
+0 1 2 3 4 
+Sau khi nhảy.
+```
+
+**Giải thích:**
+-   Vòng lặp for chạy từ i = 0 đến i < 10.
+-   Nếu i == 5, chương trình sẽ nhảy tới nhãn skip và thoát khỏi vòng lặp.
+-   In ra dòng "Sau khi nhảy.".
+
+
+**Ví dụ 2: Sử dụng trong tạo menu đơn giản**
+```c
+#include <stdio.h>
+
+int main() {
+    int option;
+
+menu:
+    printf("Chọn một tùy chọn:\n");
+    printf("1. Lựa chọn 1\n");
+    printf("2. Lựa chọn 2\n");
+    printf("3. Thoát\n");
+    printf("Nhập lựa chọn: ");
+    scanf("%d", &option);
+
+    switch (option) {
+        case 1:
+            printf("Bạn chọn Lựa chọn 1.\n");
+            goto menu;
+        case 2:
+            printf("Bạn chọn Lựa chọn 2.\n");
+            goto menu;
+        case 3:
+            printf("Thoát chương trình.\n");
+            break;
+        default:
+            printf("Lựa chọn không hợp lệ. Thử lại.\n");
+            goto menu;
+    }
+
+    return 0;
+}
+```
+**Output :**
+```c
+Chọn một tùy chọn:
+1. Lựa chọn 1
+2. Lựa chọn 2
+3. Thoát
+Nhập lựa chọn: 1
+Bạn chọn Lựa chọn 1.
+```
+
+**Ưu điểm của `goto`**
+-   Dễ dàng nhảy qua hoặc thoát khỏi các khối lệnh lớn, đặc biệt trong các vòng lặp lồng nhau.
+-   Hữu ích để thoát ra khỏi các đoạn mã phức tạp khi phát hiện lỗi.
+
+
+
+## SETJMP
+`setjmp` và `longjmp` là hai hàm trong thư viện `<setjmp.h>` của C, dùng để thực hiện nhảy không điều kiện.
+**Cách hoạt động**
+1.  `setjmp(jmp_buf env):`
+    -   Lưu trạng thái hiện tại của chương trình (bao gồm con trỏ chương trình, con trỏ ngăn xếp, và các thông tin cần thiết khác) vào biến kiểu `jmp_buf`.
+    -   Trả về giá trị bằng 0 trong lần gọi trực tiếp đầu tiên.
+2.  `longjmp(jmp_buf, int val):`
+    -   Khi hàm `longjmp` được gọi, chương trình sẽ quay trở lại vị trí mà hàm setjmp đã được gọi và tiếp tục thực thi từ đó.
+    -   Trả về một giá trị khác 0 cho lệnh `setjmp`.
+
+**Ví dụ:**
+```c
+#include <setjmp.h>
+#include <stdio.h>
+jmp_buf env;
+
+void func() {
+    printf("Trong hàm func(). Nhảy ra ngoài!\n");
+    longjmp(env, 1); // Nhảy về điểm setjmp
+}
+
+int main() {
+    if (setjmp(env) == 0) {
+        printf("Điểm ban đầu (setjmp) trong main().\n");
+        func(); // Gọi hàm và nhảy ra ngoài
+    } else {
+        printf("Quay lại sau longjmp.\n");
+    }
+    return 0;
+}
+
+```
+
+**Giải thích:**
+1.  setjmp(env):
+    -   Lưu trạng thái chương trình vào env.
+    -   Trả về 0 (nếu không có longjmp nào xảy ra).
+2.  Gọi hàm func():
+    -   Trong func(), gọi longjmp(env, 1).
+    -   Trạng thái của chương trình được phục hồi, quay lại chỗ setjmp(env).
+3.  Lúc này, setjmp(env) sẽ trả về giá trị 1 (từ longjmp).
+4.  Chương trình tiếp tục từ nhánh else trong main().
+**Lưu ý: Giá trị trả về từ setjmp khi nhảy lại từ longjmp không bao giờ là 0. Nếu dùng longjmp(env, 0), giá trị trả về của setjmp sẽ là 1.**
+
+**Ví dụ: Xử lý lỗi**
+```c
+#include <stdio.h>
+#include <setjmp.h>
+
+jmp_buf env;
+
+void divide(int a, int b) {
+    if (b == 0) {
+        printf("Lỗi: Chia cho 0!\n");
+        longjmp(env, 1); // Nhảy về setjmp
+    }
+    printf("Kết quả: %d\n", a / b);
+}
+
+int main() {
+    if (setjmp(env) == 0) {
+        divide(10, 2); // Không lỗi
+        divide(10, 0); // Gây lỗi
+        printf("Kết thúc.\n");
+    } else {
+        printf("Đã xử lý lỗi và quay lại main().\n");
+    }
+    return 0;
+}
+
+```
+**Output:**
+```c
+Kết quả: 5
+Lỗi: Chia cho 0!
+Đã xử lý lỗi và quay lại main().
+```
