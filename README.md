@@ -2,7 +2,7 @@
 ## Contents
 
 <details>
-<summary>LESSON 1: COMPILER - MACRO</summary>
+<summary>LESSON : COMPILER - MACRO</summary>
 
 ---
 
@@ -2054,3 +2054,684 @@ Kết quả: 5
 Lỗi: Chia cho 0!
 Đã xử lý lỗi và quay lại main().
 ```
+
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<details>
+<summary>LESSON 8 : MEMORY LAYOUT</summary>
+
+### Memory layout.
+    Chương trình main.exe ( trên window), main.hex ( nạp vào vi điều khiển) được lưu ở bộ nhớ SSD hoặc FLASH. Khi nhấn run chương trình trên window ( cấp nguồn cho vi điều khiển) thì những chương trình này sẽ được copy vào bộ nhớ RAM để thực thi.
+### Sơ đồ tổng quát.
+![Memory layout ](Memory-Layout-of-C-1.webp)
+
+### Text segment
+1.   Chứa tập hợp các lệnh thực thi
+2.   Quyền truy cập
+-   Chỉ đọc và thực thi:
+    -   Không có quyền ghi: Giúp bảo vệ mã chương trình khỏi bị thay đổi trong quá trình chạy .
+    -   Điều này đảm bảo rằng các đoạn mã tĩnh như chuỗi ký tự hoặc hằng số không thể bị ghi đè.
+3.  Lưu hằng số toàn cục và chuỗi hằng.
+-   Hằng số toàn cục(const):
+    **Ví dụ:**
+    ```c
+    const int MAX = 100;
+    ```
+    Biến `MAX` được lưu trong `Text Segment` và không thể thay đổi giá trị sau khi khởi tạo.
+-   Chuỗi hằng:
+    **Ví dụ:**
+    ```c
+    char* msg = "Hello, World!";
+    ```
+    Chuỗi `"Hello, World!"` được lưu trong Text Segment. Mặc dù có thể gán con trỏ `msg` tới chuỗi này, nhưng nếu cố thay đổi nội dung chuỗi, lỗi sẽ xảy ra.
+    ```c
+    msg[0] = 'h'; // Lỗi: Segmentation fault
+    ```
+4.  Biến trong Text Segment chỉ được đọc.
+**Ví dụ:**
+```c
+#include <stdio.h>
+
+const int GLOBAL_CONST = 42; // Lưu ở Text Segment
+
+int main() {
+    const char* str = "Immutable String"; // Chuỗi hằng, lưu ở Text Segment
+    printf("%s\n", str);
+
+    // Thử thay đổi giá trị chuỗi hằng (sẽ gây lỗi)
+    // str[0] = 'i'; 
+
+    return 0;
+}
+
+```
+
+### Initialized Data Segment
+1.  Chứa các biến toàn cục được khởi tạo với giá trị khác 0.
+```c
+    int global_var = 10; // Lưu trong Initialized Data Segment
+```
+-   global_var là biến toàn cục và được khởi tạo với giá trị 10.
+-   Giá trị này sẽ được lưu trong Initialized Data Segment.
+2.  Chứa các biến static được khởi tạo với giá trị khác 0
+-   Các biến static có thể là:
+
+    -   Global static: Biến static toàn cục.
+    -   Local static: Biến static cục bộ trong một hàm.
+**Ví dụ:**
+```c
+
+    static int static_global_var = 5; // Lưu trong Initialized Data Segment
+
+    void func() {
+        static int static_local_var = 3; // Lưu trong Initialized Data Segment
+    }
+```
+-   `static_global_var` và `static_local_va`r được lưu trong `Initialized Data Segment` vì chúng có từ khóa static và được khởi tạo với giá trị khác 0.
+
+3.   Quyền truy cập là đọc và ghi
+Có thể thay đổi giá trị của các biến trong Initialized Data Segment trong thời gian chạy của chương trình.
+**Ví dụ:**
+```c
+#include <stdio.h>
+
+int global_var = 10; // Initialized Data Segment
+
+int main() {
+    printf("Before: %d\n", global_var);
+    global_var = 20; // Giá trị có thể thay đổi
+    printf("After: %d\n", global_var);
+    return 0;
+}
+```
+
+**Output:**
+```c
+Before: 10
+After: 20
+
+```
+
+4. Bộ nhớ được thu hồi khi chương trình kết thúc
+-   Các biến trong `Initialized Data Segmen`t` tồn tại trong suốt thời gian sống của chương trình.
+-   Khi chương trình kết thúc, toàn bộ bộ nhớ được giải phóng bởi hệ điều hành.
+
+
+
+
+### Uninitialized Data Segment
+1. Chứa các biến toàn cục khởi tạo với giá trị bằng 0 hoặc không gán giá trị.
+**Ví dụ:**
+```c
+int global_var;       // Lưu trong BSS Segment
+int global_var2 = 0;  // Lưu trong BSS Segment
+```
+-   global_var không được khởi tạo rõ ràng nên sẽ mặc định được khởi tạo bằng 0.
+-   global_var2 được gán giá trị bằng 0, vì vậy nó cũng thuộc BSS Segment.
+
+2. Chứa các biến static với giá trị khởi tạo bằng 0 hoặc không gán giá trị.
+-   Biến static có thời gian sống xuyên suốt chương trình, và nếu không được gán giá trị hoặc gán giá trị bằng 0, chúng sẽ được lưu trong BSS Segment.
+**Ví dụ:**
+```c
+static int static_var;       // Lưu trong BSS Segment
+static int static_var2 = 0;  // Lưu trong BSS Segment
+```
+-   static_var được khởi tạo mặc định bằng 0.
+-   static_var2 được khởi tạo bằng 0, nên cả hai đều được lưu trong BSS Segment.
+
+3. Quyền truy cập: Đọc và ghi
+-   Các biến trong BSS Segment có thể được đọc và thay đổi giá trị trong thời gian chạy của chương trình.
+```c
+#include <stdio.h>
+
+int global_var; // lưu trong BSS Segment
+
+int main() {
+    printf("Before: %d\n", global_var);
+    global_var = 42; // Thay đổi giá trị
+    printf("After: %d\n", global_var);
+    return 0;
+}
+```
+**Output:**
+```c
+Before: 0
+After: 42
+```
+
+#### Ví dụ tổng quát:
+```c
+#include <stdio.h>
+
+typedef struct 
+{
+    int x;
+    int y;
+} Point_Data;
+
+
+int a = 0;
+int b;
+
+static int global = 0;
+static int global_2;
+
+static Point_Data p1 = {0,0};
+
+void test()
+{
+    static int local = 0;
+    static int local_2;
+}
+
+int main() {
+
+    global = 10;
+    printf("a: %d\n", a);
+    printf("global: %d\n", global);
+
+    return 0;
+}
+```
+
+**1. Biến toàn cục**
+-   int a = 0;
+
+    -   Được khởi tạo bằng 0, lưu trong BSS Segment.
+-   int b;
+
+    -   Không được khởi tạo, mặc định giá trị là 0. Lưu trong BSS Segment.
+-   static int global = 0;
+
+    -   Biến static toàn cục được khởi tạo bằng 0, lưu trong BSS Segment.
+-   static int global_2;
+
+    -   Biến static toàn cục chưa được khởi tạo, mặc định bằng 0. Lưu trong BSS Segment.
+-   static Point_Data p1 = {0,0};
+
+    -   p1 là một biến struct tĩnh (static), được khởi tạo với {0, 0}.
+    -   Lưu trong Initialized Data Segment vì nó được khởi tạo rõ ràng.
+
+**2. Biến cục bộ trong hàm test()**
+-   static int local = 0;
+
+    -   Biến static cục bộ, được khởi tạo bằng 0. Lưu trong BSS Segment.
+-   static int local_2;
+
+    -   Biến static cục bộ, chưa được khởi tạo. Mặc định bằng 0, lưu trong BSS Segment.
+
+
+### Stack
+1. Chứa các biến cục bộ (trừ static cục bộ) và tham số truyền vào hàm
+-   Biến cục bộ không có từ khóa static sẽ được lưu trong Stack Segment.
+-   Tham số của hàm cũng được lưu ở đây, như các giá trị được truyền khi gọi hàm.
+  
+
+**Ví dụ:**
+```c
+void example(int param) {
+    int local_var = 10; // Lưu trên Stack
+}
+```
+-   param là tham số truyền vào hàm → Lưu trên Stack.
+-   local_var là biến cục bộ trong hàm → Lưu trên Stack.
+
+2. Hằng số cục bộ có thể thay đổi thông qua con trỏ
+-   Hằng số trong hàm (ví dụ: mảng hằng số) thường được lưu trên Stack, nhưng nếu được truy cập qua con trỏ, bạn có thể thay đổi giá trị của chúng.
+
+
+**Ví dụ:**
+```c
+#include<stdio.h>
+
+void func() {
+    const int local_const = 42;
+    int *ptr = (int *)&local_const; // Ép kiểu từ `const int*` sang `int*`
+    *ptr = 100; // Thay đổi giá trị qua con trỏ (không khuyến khích)
+    printf("local_const = %d\n", local_const);
+}
+
+int main() {
+    func();
+    return 0;
+}
+
+```
+
+**Output**
+```c
+local_const = 100
+```
+3. Quyền truy cập: Đọc và ghi
+-   Các biến trong `Stack Segment` có thể đọc và ghi giá trị trong thời gian chạy của chương trình.
+
+**Ví dụ:**
+```c
+void example() {
+    int local_var = 5; // Lưu trên Stack
+    local_var = 10;    // Có thể thay đổi
+}
+```
+
+
+4. Thu hồi vùng nhớ sau khi hàm kết thúc
+-   Khi một hàm kết thúc, toàn bộ bộ nhớ của các biến cục bộ và tham số trên Stack sẽ được giải phóng tự động.
+
+-   Stack hoạt động theo cơ chế LIFO (Last In, First Out), tức là vùng nhớ mới nhất được sử dụng sẽ là vùng nhớ được giải phóng đầu tiên.
+
+**Ví dụ:**
+```c
+void func1() {
+    int x = 10; // Lưu trên Stack
+} // Sau khi func1 kết thúc, `x` sẽ được thu hồi.
+
+void func2() {
+    func1(); // Gọi func1, Stack sẽ tạo vùng nhớ riêng cho biến `x`
+}
+```
+### Heap
+- Đặc điểm: Bộ nhớ heap dùng để phân bổ bộ nhớ động, tức là bộ nhớ được cấp phát khi chương trình đang chạy (cấp phát động).
+- Hoạt động:
+	- Cấp phát động: Dữ liệu như đối tượng, cấu trúc dữ liệu có thể được cấp phát bộ nhớ tại thời điểm chạy.Điều này cho phép chương trình tạo ra và giải phóng bộ nhớ theo nhu cầu, thích ứng với sự biến đổi của dữ liệu trong quá trình chạy.
+	- Quản lý bộ nhớ: Người lập trình phải giải phóng bộ nhớ khi không còn sử dụng để tránh rò rỉ bộ nhớ (memory leaks).
+	- Phân mảnh: Khi bộ nhớ được cấp phát và giải phóng, có thể tạo ra các khoảng trống, dẫn đến phân mảnh bộ nhớ.
+   	- Quyền truy cập: Bộ nhớ trên heap thường có quyền đọc và ghi, nghĩa là dữ liệu có thể được đọc và sửa đổi trong suốt thời gian chương trình chạy.
+   	- Cấp Phát và Giải Phóng Bộ Nhớ: Các hàm như malloc()(Tham số truyền vào: kích thước mong muốn(byte), Giá trị trả về: con trỏ void), calloc(), realloc(), và free() được sử dụng để cấp phát và giải phóng bộ nhớ trên heap.
+	- Kích Thước Thay Đổi: Kích thước của heap có thể thay đổi trong quá trình thực thi của chương trình, tùy thuộc vào các thao tác cấp phát và giải phóng bộ nhớ.
+	- Không Giữ Giá Trị Mặc Định: Bộ nhớ trên heap không giữ giá trị mặc định như trong Data Segment. Nếu không được khởi tạo, giá trị của biến trên heap sẽ không xác định.
+	```c
+	 #include <stdlib.h>
+	int main() {
+	    int *arr_malloc, *arr_calloc;
+	    size_t size = 5;
+	
+	    // Sử dụng malloc
+	    arr_malloc = (int*)malloc(size * sizeof(int));
+	
+	    // Sử dụng calloc
+	    arr_calloc = (int*)calloc(size, sizeof(int));
+	
+	    // ...
+	
+	    // Giải phóng bộ nhớ
+	    free(arr_malloc);
+	    free(arr_calloc);
+	
+	    return 0;
+	}
+- ví dụ
+  	``c
+	  #include <stdio.h>
+	 #include <stdlib.h>
+	int main(int argc, char const *argv[])
+	{  
+	    int soluongkytu = 0;
+	
+	    char* ten = (char*) malloc(sizeof(char) * soluongkytu);
+	    for (int i = 0; i < 3; i++)
+	    {
+	        printf("Nhap so luong ky tu trong ten: \n");
+	        scanf("%d", &soluongkytu);
+	        ten = realloc(ten, sizeof(char) * soluongkytu);
+	        printf("Nhap ten cua ban: \n");
+	        scanf("%s", ten);
+	
+	        printf("Hello %s\n", ten);
+	    }
+	    return 0;
+	}
+### Stack và Heap
+- Bộ nhớ Stack được dùng để lưu trữ các biến cục bộ trong hàm, tham số truyền vào... Truy cập vào bộ nhớ này rất nhanh và được thực thi khi chương trình được biên dịch.
+- Bộ nhớ Heap được dùng để lưu trữ vùng nhớ cho những biến con trỏ được cấp phát động bởi các hàm malloc - calloc - realloc (trong C).
+- Stack: vùng nhớ Stack được quản lý bởi hệ điều hành, dữ liệu được lưu trong Stack sẽ tự động giải phóng khi hàm thực hiện xong công việc của mình.
+- Heap: Vùng nhớ Heap được quản lý bởi lập trình viên (trong C hoặc C++), dữ liệu trong Heap sẽ không bị hủy khi hàm thực hiện xong, điều đó có nghĩa bạn phải tự tay giải phóng vùng nhớ bằng câu lệnh free (trong C), và delete hoặc delete [] (trong C++), nếu không sẽ xảy ra hiện tượng rò rỉ bộ nhớ.
+  ```c
+	  #include <stdio.h>
+	  #include <stdlib.h>
+	
+	void test1()
+	{
+	    int array[3];
+	    for (int i = 0; i < 3; i++)
+	    {
+	        printf("address of array[%d]: %p\n", i, (array+i));
+	    }
+	    printf("----------------------\n");
+	}
+	
+	void test2()
+	{
+	    int *array = (int*)malloc(3*sizeof(int));
+	    for (int i = 0; i < 3; i++)
+	    {
+	        printf("address of array[%d]: %p\n", i, (array+i));
+	    }
+	    printf("----------------------\n");
+	    //free(array);
+	}
+	int main(int argc, char const *argv[])
+	{  
+	    test1();
+	    test1();
+	    test2();
+	    test2();
+	    return 0;
+	}
+- Stack: bởi vì bộ nhớ Stack cố định nên nếu chương trình bạn sử dụng quá nhiều bộ nhớ vượt quá khả năng lưu trữ của Stack chắc chắn sẽ xảy ra tình trạng tràn bộ nhớ Stack (Stack overflow), các trường hợp xảy ra như bạn khởi tạo quá nhiều biến cục bộ, hàm đệ quy vô hạn,...
+	```c
+	int foo(int x){
+	    printf("De quy khong gioi han\n");
+	    return foo(x);
+	}
+- Heap: Nếu bạn liên tục cấp phát vùng nhớ mà không giải phóng thì sẽ bị lỗi tràn vùng nhớ Heap (Heap overflow). Nếu bạn khởi tạo một vùng nhớ quá lớn mà vùng nhớ Heap không thể lưu trữ một lần được sẽ bị lỗi khởi tạo vùng nhớ Heap thất bại.
+	```c
+int *A = (int *)malloc(18446744073709551615)
+
+#### So sánh malloc - calloc - realloc
+1.  malloc (Memory Allocation):
+
+-   Chỉ cấp phát một vùng nhớ có kích thước bằng tham số size.
+-   Không khởi tạo giá trị trong vùng nhớ.
+-   Vùng nhớ chứa dữ liệu không xác định (garbage value).
+
+**Ví dụ:**
+```c
+int *arr = (int *)malloc(5 * sizeof(int)); // Cấp phát vùng nhớ cho 5 số nguyên.
+```
+
+2.  calloc (Contiguous Allocation):
+
+-   Cấp phát vùng nhớ cho một số lượng phần tử, mỗi phần tử có kích thước bằng size.
+-   Tự động khởi tạo tất cả các byte trong vùng nhớ về 0.
+-   Thích hợp khi cần vùng nhớ sạch (zeroed memory).
+
+**Ví dụ:**
+
+```c
+int *arr = (int *)calloc(5, sizeof(int)); // Cấp phát vùng nhớ cho 5 số nguyên và khởi tạo về 0.
+
+```
+3.  realloc (Reallocation):
+
+-   Thay đổi kích thước vùng nhớ đã cấp phát bằng malloc hoặc calloc.
+-   Nếu kích thước mới lớn hơn, các byte mới được khởi tạo (không xác định).
+-   Nếu kích thước mới nhỏ hơn, vùng nhớ bị cắt ngắn.
+-   Nếu ptr là NULL, realloc hoạt động giống như malloc.
+
+**Ví dụ:**
+```c
+arr = (int *)realloc(arr, 10 * sizeof(int)); // Mở rộng vùng nhớ cho 10 số nguyên.
+
+```
+
+
+
+</details>
+ <details><summary>LESSON 9: STACK AND QUEUE </summary>
+  <p>
+  
+ ## LESSON 11: STACK AND QUEUE
+ ### STACK
+ - Trong ngôn ngữ C, stack (ngăn xếp) là một vùng nhớ được sử dụng để lưu trữ dữ liệu tạm thời trong suốt quá trình thực thi chương trình. Nó đặc biệt quan trọng trong quản lý bộ nhớ, đặc biệt khi làm việc với các hàm, các biến cục bộ, và các đối số của hàm.
+#### Đặc điểm của Stack:
+- Nguyên lý hoạt động (Last In, First Out - LIFO): Stack hoạt động theo nguyên lý LIFO, nghĩa là dữ liệu được lưu vào stack sẽ được lấy ra theo thứ tự ngược lại (mới nhất vào trước, cũ nhất ra trước). Trong thuật ngữ ngăn xếp, hoạt động chèn được gọi là hoạt động PUSH và hoạt động xóa được gọi là hoạt động POP.
+  ![image](https://github.com/user-attachments/assets/c8833a29-ef73-4d44-9667-a1ecf25bf818)
+- Lưu trữ dữ liệu tạm thời: Stack chủ yếu dùng để lưu trữ:
+	- Các biến cục bộ (local variables)
+	- Các tham số (parameters) của hàm
+	- Địa chỉ trả về (return addresses) khi gọi hàm
+- Tự động cấp phát và giải phóng bộ nhớ:
+	- Bộ nhớ trên stack được cấp phát khi một hàm được gọi và giải phóng khi hàm đó hoàn tất.
+	- Vì vậy, stack có tính "tự động" trong việc quản lý bộ nhớ: không cần phải dùng malloc() hay free() như với heap (đống).
+-Hạn chế về kích thước: Kích thước của stack là có hạn và thường nhỏ hơn so với heap. Nếu chương trình sử dụng quá nhiều bộ nhớ trên stack (ví dụ: đệ quy quá sâu), có thể dẫn đến stack overflow.
+#### Các thao tác trên Stack
+- "push" để thêm một phần tử vào đỉnh của stack
+- "pop" để xóa một phần tử ở đỉnh stack.
+- “top” để lấy giá trị của phần tử ở đỉnh stack.
+- Is_Full(): Kiểm tra xem ngăn xếp đã đầy chưa
+- Is_Empty(): Kiểm tra xem ngăn xếp có trống hay không.
+#### Định nghĩa Stack
+	 ```c
+	typedef struct Stack {
+	    int* items; // mảng chứa các giá trị trong ngăn xếp
+	    int size;   // kích thước của mảng đó
+	    int top;   // giá trị của phần tử trên cùng
+	  } Stack;
+ #### Khởi tạo 1 stack
+ 	```c
+	void initialize( Stack *stack, int size) {
+	    stack->items = (int*) malloc(sizeof(int) * size); //cấp phát động 1 mảng chứa các giá trị
+	    stack->size = size; // truyền vào kích thước mong muốn
+	    stack->top = -1; // gắn giá trị trên cùng bằng -1
+	}
+#### Hoạt động Is_Full() trong cấu trúc dữ liệu ngăn xếp
+	```c
+	int Is_Full( Stack stack) {
+	    return stack.top == stack.size - 1;
+	}
+#### Hoạt động Is_Empty() trong cấu trúc dữ liệu ngăn xếp
+	 ```c
+	int Is_Empty( Stack stack) {
+	    return stack.top == -1;
+	 }
+#### Hoạt động Push() trong cấu trúc dữ liệu ngăn xếp
+	```c
+	void Push( Stack *stack, int value) {
+	    if (!is_full(*stack)) {
+	        stack->items[++stack->top] = value;
+	    } else {
+	        printf("Stack overflow\n");
+	    }
+	}
+#### Hoạt động Pop() trong cấu trúc dữ liệu ngăn xếp
+	```c
+	int Pop( Stack *stack) {
+	    if (!is_empty(*stack)) {
+	        return stack->items[stack->top--];
+	    } else {
+	        printf("Stack underflow\n");
+	        return -1;
+	    }
+	}
+#### Hoạt động Top() trong cấu trúc dữ liệu ngăn xếp
+	```c
+	int Top( Stack stack) {
+	    if (!is_empty(stack)) {
+	        return stack.items[stack.top];
+	    } else {
+	        printf("Stack is empty\n");
+	        return -1;
+	    }
+	}
+#### ví dụ
+	```c
+	#include <stdio.h>
+	#include <stdlib.h>
+	
+	typedef struct Stack {
+	    int* items;
+	    int size;
+	    int top;
+	} Stack;
+	
+	void initialize( Stack *stack, int size) {
+	    stack->items = (int*) malloc(sizeof(int) * size);
+	    stack->size = size;
+	    stack->top = -1;
+	}
+	
+	int is_empty( Stack stack) {
+	    return stack.top == -1;
+	}
+	
+	int is_full( Stack stack) {
+	    return stack.top == stack.size - 1;
+	}
+	
+	void push( Stack *stack, int value) {
+	    if (!is_full(*stack)) {
+	        stack->items[++stack->top] = value;
+	    } else {
+	        printf("Stack overflow\n");
+	    }
+	}
+	
+	int pop( Stack *stack) {
+	    if (!is_empty(*stack)) {
+	        return stack->items[stack->top--];
+	    } else {
+	        printf("Stack underflow\n");
+	        return -1;
+	    }
+	}
+	
+	int top( Stack stack) {
+	    if (!is_empty(stack)) {
+	        return stack.items[stack.top];
+	    } else {
+	        printf("Stack is empty\n");
+	        return -1;
+	    }
+	}
+	
+	int main() {
+	    Stack stack1;
+	    initialize(&stack1, 5);
+	
+	
+	    push(&stack1, 10);
+	    push(&stack1, 20);
+	    push(&stack1, 30);
+	    push(&stack1, 40);
+	    push(&stack1, 50);
+	    push(&stack1, 60);
+	
+	    printf("Top element: %d\n", top(stack1));
+	
+	    printf("Pop element: %d\n", pop(&stack1));
+	    printf("Pop element: %d\n", pop(&stack1));
+	
+	    printf("Top element: %d\n", top(stack1));
+	
+	    return 0;
+	}
+ ### QUEUE
+ - Queue (hàng đợi) là một cấu trúc dữ liệu dùng để lưu trữ và quản lý các phần tử theo nguyên lý FIFO (First In, First Out - Vào trước, ra trước). Điều này có nghĩa là phần tử được thêm vào đầu tiên sẽ được lấy ra đầu tiên. Queue thường được sử dụng trong các bài toán yêu cầu xử lý các phần tử theo thứ tự thời gian như trong các hệ thống lên lịch, xử lý sự kiện, hoặc các thuật toán tìm kiếm.
+   ![image](https://github.com/user-attachments/assets/93917cbc-0101-45df-a710-3f3ce897ddae)
+#### Đặc điểm của Queue
+- Chỉ để cập tới Circular queue, ta có hai từ khóa front và rear:
+	- front đại diện cho vị trí của phần tử đầu tiên trong hàng đợi. Đây là phần tử sẽ được lấy ra đầu tiên khi thực hiện thao tác dequeue (lấy phần tử ra).
+	-rear đại diện cho vị trí của phần tử cuối cùng trong hàng đợi. Đây là phần tử cuối cùng được thêm vào khi thực hiện thao tác enqueue (thêm phần tử vào).
+- Khi queue rỗng, front và rear bằng -1.
+- Khi queue đầy, (rear + 1) % size == front.
+- Khi thực hiện dequeue, chỉ số front sẽ được tăng lên để trỏ tới phần tử tiếp theo trong hàng đợi.
+- Khi thực hiện enqueue, rear sẽ được tăng lên để trỏ tới vị trí mới cho phần tử vừa được thêm vào hàng đợi.
+- Nếu hàng đợi đầy, rear sẽ quay vòng theo cơ chế vòng tròn (circular queue), điều này có nghĩa là khi rear đạt tới giới hạn của mảng, nó sẽ quay về 0 để sử dụng lại vị trí cũ chỉ khi có phần tử được dequeue.
+  #### Các thao tác trên Queue
+- enqueue(): Thêm 1 phần tử dữ liệu vào trong hàng đợi
+- dequeue(): Xóa 1 phần tử từ hàng đợi
+- Front(): lấy phần tử ở đầu hàng đợi, mà không xóa phần tử này
+- Is_Full(): Kiểm tra xem hàng đợi đã đầy chưa
+- Is_Empty(): Kiểm tra xem hàng đợi có trống hay không
+  	```c
+	#include <stdio.h>
+	#include <stdlib.h>
+	
+	
+	typedef struct Queue {
+	    int* items;
+	    int size;
+	    int front, rear;
+	} Queue;
+	
+	void initialize(Queue *queue, int size) 
+	{
+	    queue->items = (int*) malloc(sizeof(int)* size);
+	    queue->front = -1;
+	    queue->rear = -1;
+	    queue->size = size;
+	}
+	
+	int is_empty(Queue queue) {
+	    return queue.front == -1;
+	}
+	
+	int is_full(Queue queue) {
+	    return (queue.rear + 1) % queue.size == queue.front;
+	}
+	
+	void enqueue(Queue *queue, int value) {
+	    if (!is_full(*queue)) {
+	        if (is_empty(*queue)) {
+	            queue->front = queue->rear = 0;
+	        } else {
+	            queue->rear = (queue->rear + 1) % queue->size;
+	        }
+	        queue->items[queue->rear] = value;
+	    } else {
+	        printf("Queue overflow\n");
+	    }
+	}
+	
+	int dequeue(Queue *queue) {
+	    if (!is_empty(*queue)) {
+	        int dequeued_value = queue->items[queue->front];
+	        if (queue->front == queue->rear) {
+	            queue->front = queue->rear = -1;
+	        } else {
+	            queue->front = (queue->front + 1) % queue->size;
+	        }
+	        return dequeued_value;
+	    } else {
+	        printf("Queue underflow\n");
+	        return -1;
+	    }
+	}
+	
+	int front(Queue queue) {
+	    if (!is_empty(queue)) {
+	        return queue.items[queue.front];
+	    } else {
+	        printf("Queue is empty\n");
+	        return -1;
+	    }
+	}
+	
+	int main() {
+	    Queue queue;
+	    initialize(&queue, 3);
+	
+	    enqueue(&queue, 10);
+	    enqueue(&queue, 20);
+	    enqueue(&queue, 30);
+	
+	    printf("Front element: %d\n", front(queue));
+	
+	    printf("Dequeue element: %d\n", dequeue(&queue));
+	    printf("Dequeue element: %d\n", dequeue(&queue));
+	
+	    printf("Front element: %d\n", front(queue));
+	
+	    enqueue(&queue, 40);
+	    enqueue(&queue, 50);
+	    printf("Dequeue element: %d\n", dequeue(&queue));
+	    printf("Front element: %d\n", front(queue));
+	
+	    return 0;
+	}
+
+</details>
