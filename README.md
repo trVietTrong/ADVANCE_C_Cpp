@@ -2735,3 +2735,449 @@ arr = (int *)realloc(arr, 10 * sizeof(int)); // Mở rộng vùng nhớ cho 10 s
 	}
 
 </details>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<details><summary>LESSON 10: LINKED LIST </summary>
+  <p>
+  
+ ## LESSON 10: LINKED LIST
+ ### Khái niệm Linked list 
+ - Linked list là một cấu trúc dữ liệu trong lập trình máy tính, được sử dụng để tổ chức và lưu trữ dữ liệu. Một linked list bao gồm một chuỗi các "nút" (nodes) được lưu trữ không liền kề nhau trong bộ nhớ, mỗi nút chứa một giá trị dữ liệu và một con trỏ (pointer) đến nút tiếp theo trong chuỗi.
+- Khác với mảng (array), trong đó các phần tử được lưu trữ liên tiếp trong bộ nhớ, linked list cho phép linh hoạt hơn trong việc thêm và xóa phần tử mà không cần phải thay đổi kích thước hoặc di chuyển các phần tử khác.
+![image](https://github.com/user-attachments/assets/edcf0aa4-5c38-4d7b-8846-c8435ea056c6)
+### Các loại linked list
+- Có hai loại linked list chính:
+	- Singly Linked List (Danh sách liên kết đơn): Mỗi nút chỉ chứa một con trỏ đến nút tiếp theo trong chuỗi.
+	- Doubly Linked List (Danh sách liên kết đôi): Mỗi nút chứa hai con trỏ, một trỏ đến nút tiếp theo và một trỏ đến nút trước đó.
+### Tính chất
+- Danh sách liên kết có thể mở rộng và thu hẹp một cách linh hoạt.
+- Mặc định nodes sẽ chưa liên kết với nhau => phải liên kết các nodes thông qua con trỏ.
+- Phần tử cuối cùng trong Linked list sẽ trỏ vào NULL (con trỏ NULL), đánh dấu sự kết thúc của danh sách.
+- Linked list có thể thay đổi kích thước linh hoạt. Bạn có thể thêm hoặc xóa các node mà không cần phải thay đổi kích thước của danh sách hoặc di chuyển các phần tử khác, như trong mảng.
+- Để truy cập một phần tử bất kỳ trong linked list, bạn phải bắt đầu từ node đầu tiên và duyệt lần lượt qua các node tiếp theo cho đến khi tìm thấy phần tử cần tìm. Điều này làm cho việc truy cập các phần tử ngẫu nhiên (random access) kém hiệu quả hơn so với mảng.
+- Đây là kiểu cấu trúc dữ liệu kiểu cấp phát động có nghĩa là còn bộ nhớ thì còn cấp phát được, cấp phát đến khi nào hết bộ nhớ thì thôi - Vùng nhớ cấp phát : Heap.
+- Linked list chỉ sử dụng bộ nhớ cho các node đã được tạo ra. Điều này giúp tiết kiệm bộ nhớ khi số lượng phần tử thay đổi liên tục. Không lãng phí bộ nhớ nhưng cần thêm bộ nhớ để lưu phần con trỏ.
+- Thêm hoặc xóa node ở đầu hoặc giữa danh sách có thể thực hiện nhanh chóng (O(1)) nếu bạn đã có địa chỉ của node cần thay đổi. Tuy nhiên, nếu muốn xóa hoặc thêm ở cuối danh sách, bạn cần phải duyệt qua danh sách trước (O(n)).
+### Cấu trúc của 1 node
+- Trong C, ta thường dùng cấu trúc (struct) để định nghĩa một node. Cấu trúc này bao gồm:
+	- Dữ liệu (data): chứa giá trị hoặc thông tin của phần tử.
+	- Con trỏ (pointer): chứa địa chỉ của node tiếp theo trong danh sách.
+ 		```c
+		  typedef struct Node { // có Node ở dòng 1 để khi phiên dịch mã sẽ hiểu Node* next ở dòng 3, không báo lỗi
+		    int data;           // Giá trị (dữ liệu) của node
+		    struct Node* next;  // Con trỏ trỏ đến node tiếp theo
+		};
+  	- Node ở đây có phần dữ liệu là kiểu số nguyên, ngoài ra nó có 1 con trỏ next trỏ tới chính struct node (là địa chỉ của node tiếp theo trong linked list)
+### Các thao tác với linked list
+#### Khởi tạo Node 
+    ```c
+	#include <stdio.h>
+	#include <stdlib.h>
+	
+	struct Node {
+	    int data;     // Dữ liệu của node
+	    struct Node* next; // Con trỏ tới node tiếp theo
+	  };
+	
+	// Khởi tạo một node mới với dữ liệu là 10
+	struct Node* createNode(int data) {
+	    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node)); // khởi tạo địa chỉ cho Node
+	    newNode->data = data;
+	    newNode->next = NULL; // chưa liên kết Node với nhau thì phải Null trước
+	    return newNode; // trả về lại vị trí của newNode
+	    }
+	
+	int main() {
+	    struct Node* node1 = createNode(10);
+	    printf("Data of the new node: %d\n", node1->data);
+	    return 0;
+	    }
+#### Thêm một Node vào vị trí cuối cùng trong list
+![image](https://github.com/user-attachments/assets/bd1b4279-90f5-4346-985b-9762961f2952)
+- quy trình thêm một node vào cuối danh sách là:
+	- Tạo node mới với dữ liệu bạn muốn thêm.
+	- Nếu danh sách rỗng, gán node mới làm head.
+	- Nếu danh sách không rỗng, duyệt qua danh sách đến node cuối cùng, sau đó gán con trỏ next của node cuối cùng trỏ đến node mới.
+    ```c
+	#include <stdio.h>
+	#include <stdlib.h>
+	
+	struct Node {
+	    int data;
+	    struct Node* next;
+	};
+	
+	// Hàm tạo node mới
+	struct Node* createNode(int data) {
+	    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+	    newNode->data = data;
+	    newNode->next = NULL;
+	    return newNode;
+	}
+	
+	// Hàm thêm node vào cuối danh sách
+	void append(struct Node** head, int data) {
+	    struct Node* newNode = createNode(data);
+	    
+	    // Nếu danh sách rỗng, gán node mới làm head
+	    if (*head == NULL) {
+	        *head = newNode;
+	        return;
+	    }
+	
+	    // Duyệt đến node cuối cùng
+	    struct Node* last = *head;
+	    while (last->next != NULL) {
+	        last = last->next;
+	    }
+	
+	    // Gán con trỏ next của node cuối cùng trỏ đến node mới
+	    last->next = newNode;
+	}
+	
+	// Hàm in danh sách liên kết
+	void printList(struct Node* head) {
+	    struct Node* temp = head;
+	    while (temp != NULL) {
+	        printf("%d -> ", temp->data);
+	        temp = temp->next;
+	    }
+	    printf("NULL\n");
+	}
+	
+	int main() {
+	    struct Node* head = NULL;
+	    
+	    append(&head, 10);
+	    append(&head, 20);
+	    append(&head, 30);
+	    
+	    printList(head);  // Output: 10 -> 20 -> 30 -> NULL
+	    return 0;}
+#### Chèn một node vào vị trí đầu tiên trong list
+- Tạo một node mới với dữ liệu bạn muốn chèn.
+- Gán con trỏ next của node mới trỏ đến head hiện tại (node đầu tiên của danh sách).
+- Cập nhật head để trỏ đến node mới
+  ```c
+	  // Hàm thêm một node vào đầu danh sách
+	void insertAtHead(struct Node** head, int data) {
+	    struct Node* newNode = createNode(data);  // Tạo node mới với dữ liệu
+	
+	    // Gán con trỏ next của node mới trỏ đến node đầu tiên (head) hiện tại
+	    newNode->next = *head;
+	    
+	    // Cập nhật head để trỏ đến node mới
+	    *head = newNode;
+	}
+	
+	// Hàm in danh sách liên kết
+	void printList(struct Node* head) {
+	    struct Node* temp = head;
+	    while (temp != NULL) {
+	        printf("%d -> ", temp->data);  // In dữ liệu của node
+	        temp = temp->next;             // Di chuyển đến node tiếp theo
+	    }
+	    printf("NULL\n");  // In kết thúc danh sách
+	}
+#### Chèn một node vào vị trí bất kì
+- Tạo một node mới với dữ liệu bạn muốn chèn.
+- Duyệt đến vị trí chèn: Bạn cần duyệt qua danh sách cho đến vị trí cần chèn. Vị trí này sẽ được chỉ định dưới dạng chỉ số (index).
+- Chỉnh sửa các con trỏ: Sau khi tìm thấy vị trí chèn, bạn sẽ thực hiện các bước sau:
+	- Gán con trỏ next của node mới trỏ tới node tại vị trí tiếp theo (nếu có).
+	- Gán con trỏ next của node trước vị trí chèn (node tại vị trí index-1) trỏ tới node mới.
+   ```c
+	   // Hàm thêm một node vào vị trí bất kỳ trong danh sách
+	void insertAtPosition(struct Node** head, int data, int position) {
+	    // Nếu vị trí không hợp lệ (vị trí nhỏ hơn 0)
+	    if (position < 0) {
+	        printf("Vị trí không hợp lệ.\n");
+	        return;
+	    }
+	
+	    // Tạo node mới với dữ liệu cần thêm
+	    struct Node* newNode = createNode(data);
+	
+	    // Nếu thêm ở đầu (vị trí 0)
+	    if (position == 0) {
+	        newNode->next = *head;  // Con trỏ next của node mới trỏ đến node đầu tiên
+	        *head = newNode;        // Cập nhật head trỏ đến node mới
+	        return;
+	    }
+	
+	    // Duyệt đến node trước vị trí cần chèn (node ở vị trí position - 1)
+	    struct Node* temp = *head;
+	    for (int i = 0; i < position - 1 && temp != NULL; i++) {
+	        temp = temp->next;
+	    }
+	
+	    // Nếu temp là NULL, vị trí quá lớn, không thể thêm
+	    if (temp == NULL) {
+	        printf("Vị trí vượt quá danh sách hiện tại.\n");
+	        free(newNode);
+	        return;
+	    }
+	
+	    // Gắn con trỏ next của node mới trỏ đến node tiếp theo của node hiện tại
+	    newNode->next = temp->next;
+	
+	    // Gắn con trỏ next của node hiện tại trỏ đến node mới
+	    temp->next = newNode;
+	}
+#### Xóa node đầu list
+ 	```c
+		// Hàm xóa node đầu tiên trong danh sách
+	void deleteAtHead(struct Node** head) {
+	    // Kiểm tra danh sách có rỗng không
+	    if (*head == NULL) {
+	        printf("Danh sách rỗng, không có node để xóa.\n");
+	        return;
+	    }
+	
+	    // Lưu trữ node đầu tiên
+	    struct Node* temp = *head;
+	
+	    // Cập nhật head để trỏ đến node tiếp theo
+	    *head = (*head)->next;
+	
+	    // Giải phóng bộ nhớ của node đầu tiên
+	    free(temp);
+	}
+#### xóa node cuối list
+	```c
+	// Hàm xóa node cuối cùng trong danh sách
+	void deleteAtEnd(struct Node** head) {
+	    // Kiểm tra danh sách có rỗng không
+	    if (*head == NULL) {
+	        printf("Danh sách rỗng, không có node để xóa.\n");
+	        return;
+	    }
+	
+	    // Nếu chỉ có một node duy nhất
+	    if ((*head)->next == NULL) {
+	        free(*head);  // Giải phóng bộ nhớ của node duy nhất
+	        *head = NULL; // Cập nhật head về NULL
+	        return;
+	    }
+	
+	    // Duyệt đến node trước node cuối cùng
+	    struct Node* temp = *head;
+	    while (temp->next != NULL && temp->next->next != NULL) {
+	        temp = temp->next;  // Di chuyển đến node trước node cuối cùng
+	    }
+	
+	    // Xóa node cuối cùng
+	    free(temp->next);  // Giải phóng bộ nhớ của node cuối cùng
+	    temp->next = NULL;  // Cập nhật con trỏ next của node trước node cuối cùng thành NULL
+#### Lấy kích thước của list
+	```c
+	// Hàm lấy kích thước của danh sách liên kết
+	int getSize(struct Node* head) {
+	    int size = 0;  // Khởi tạo biến đếm kích thước
+	    struct Node* temp = head;
+	    
+	    // Duyệt qua danh sách và đếm số node
+	    while (temp != NULL) {
+	        size++;
+	        temp = temp->next;  // Di chuyển đến node tiếp theo
+	    }
+	    
+	    return size;
+	}
+  </details>
+
+
+
+
+
+
+
+
+
+  <details><summary>LESSON 12: BINARY SEARCH - FILE OPERATIONS - CODE STANDARDS </summary>
+  <p>
+  
+ ## LESSON 12: BINARY SEARCH - FILE OPERATIONS - CODE STANDARDS
+ ### BINARY SEARCH
+ - Binary Search (tìm kiếm nhị phân) là một thuật toán tìm kiếm hiệu quả trong một danh sách đã được sắp xếp (tăng dần hoặc giảm dần). Thuật toán này hoạt động bằng cách liên tục chia đôi danh sách và so sánh giá trị cần tìm với phần tử ở giữa, từ đó loại bỏ một nửa của danh sách và tiếp tục tìm kiếm trong nửa còn lại.
+#### Các bước mô tả thuật toán
+- Khởi tạo: Đặt hai chỉ số left và right lần lượt trỏ tới phần tử đầu và phần tử cuối của danh sách.
+- Tính giữa: Tính chỉ số của phần tử ở giữa danh sách bằng công thức: mid = (left + right) /2
+- So sánh:
+	- Nếu phần tử giữa bằng giá trị cần tìm, thuật toán kết thúc và trả về chỉ số của phần tử.
+	- Nếu phần tử giữa lớn hơn giá trị cần tìm, tìm kiếm sẽ tiếp tục ở nửa bên trái của danh sách, tức là điều chỉnh lại right = mid - 1.
+	- Nếu phần tử giữa nhỏ hơn giá trị cần tìm, tìm kiếm sẽ tiếp tục ở nửa bên phải của danh sách, tức là điều chỉnh lại left = mid + 1.
+- Lặp lại: Lặp lại bước 2 và 3 cho đến khi giá trị được tìm thấy hoặc không còn phần tử nào để kiểm tra (left > right).
+#### Đặc điểm:
+- Thời gian chạy: Thuật toán tìm kiếm nhị phân có thời gian chạy O(log n), rất nhanh khi so với tìm kiếm tuyến tính O(n), đặc biệt là với các danh sách có kích thước lớn.
+- Yêu cầu: Danh sách phải được sắp xếp (theo thứ tự tăng dần hoặc giảm dần).
+#### Ví dụ tìm kiếm nhị phân
+	 ```c
+	#include <stdio.h>
+	#include <stdlib.h>
+	
+	int binarySearch(int* arr, int l, int r, int x)
+	{
+	    if (r >= l)
+	    {
+	        int mid = (r + l) / 2;
+	
+	  
+	        if (arr[mid] == x)  return mid;
+	
+	   
+	        if (arr[mid] > x) return binarySearch(arr, l, mid - 1, x);
+	
+	  
+	        return binarySearch(arr, mid + 1, r, x);
+	    }
+	
+	
+	
+	
+	    return -1;
+	}
+	
+	void swap(int *a, int *b)
+	{
+	    int temp = *a; // 0x02 (10), 0x03 (20)
+	    *a = *b;
+	    *b = temp;
+	}
+	
+	void bubbleSort(int arr[], int n)
+	{
+	    int i, j;
+	    for (i = 0; i < n - 1; i++)
+	    {
+	       
+	        for (j = 0; j < n - i - 1; j++)
+	        {
+	           
+	            if (arr[j] > arr[j + 1])
+	                swap(&arr[j], &arr[j + 1]);
+	        }
+	    }
+	}
+	
+	int main()
+	{
+		int n, x, i;
+	    printf("Nhap so phan tu cua mang: ");
+	    scanf_s("%d", &n);
+	    int* arr = (int*)malloc(n * sizeof(int));
+	    printf("Nhap cac phan tu cua mang: ");
+	    for (i = 0; i < n; i++)
+	    {
+	        scanf_s("%d", &arr[i]);
+	    }
+	
+	    bubbleSort(arr, n);
+	    for (int i = 0; i < n; i++)
+	    {
+	        printf_s("i = %d\n", arr[i]);
+	    }
+	
+	    printf_s("Nhap gia tri can tim: ");
+	    scanf_s("%d", &x);
+	    int result = binarySearch(arr, 0, n - 1, x);
+	    if (result == -1)
+	        printf_s("Khong tim thay %d trong mang.\n", x);
+	    else
+	        printf_s("Tim thay %d tai vi tri %d trong mang.\n", x, result);
+	    free(arr);
+	    return 0;
+	}
+### FILE OPERATIONS
+- Ngôn ngữ lập trình C cung cấp một số thư viện và hàm tiêu biểu để thực hiện các thao tác với file. 
+- File CSV (Comma-Separated Values) là một loại file văn bản được sử dụng để lưu trữ và truyền tải dữ liệu có cấu trúc dưới dạng bảng, trong đó các dữ liệu của các cột được phân tách bằng dấu phẩy (,) hoặc một ký tự ngăn cách khác.
+#### Mở file
+- Để mở một file, bạn có thể sử dụng hàm fopen(). Hàm này trả về một con trỏ FILE, và cần được kiểm tra để đảm bảo file đã mở thành công.
+	```c
+	FILE *file = fopen(const char *file_name, const char *access_mode);
+	// filename: Tên tệp tin.
+	// mode: Chế độ mở tệp tin (ví dụ: "r", "w", "a", "r+", "w+", ...).
+#### Đọc file
+- Đọc từ tệp tin: Sau khi mở tệp tin, bạn có thể đọc dữ liệu từ tệp bằng các hàm như fgetc(), fgets(), hoặc fread().
+	- fgetc(FILE *stream): Đọc một ký tự từ tệp tin.
+	- fgets(char *str, int num, FILE *stream): Đọc một dòng từ tệp tin.
+	- fread(void *ptr, size_t size, size_t count, FILE *stream): Đọc dữ liệu vào bộ nhớ.
+#### Ghi file
+- Ghi vào tệp tin: Bạn có thể ghi dữ liệu vào tệp bằng các hàm như fputc(), fputs(), hoặc fwrite().
+
+	- fputc(int char, FILE *stream): Ghi một ký tự vào tệp.
+	- fputs(const char *str, FILE *stream): Ghi một chuỗi vào tệp.
+	- fwrite(const void *ptr, size_t size, size_t count, FILE *stream): Ghi dữ liệu vào tệp từ bộ nhớ.
+ #### Đóng file
+- Đóng tệp tin: Sau khi hoàn thành việc thao tác với tệp, bạn cần đóng tệp để giải phóng tài nguyên bằng cách sử dụng hàm fclose().
+
+	```c
+	int fclose(FILE *stream);
+#### Kiểm tra lỗi hoặc kết thúc tệp
+- feof(FILE *stream): Kiểm tra nếu con trỏ tệp đang ở cuối tệp.
+- ferror(FILE *stream): Kiểm tra nếu có lỗi xảy ra khi làm việc với tệp.
+#### Di chuyển con trỏ tệp:
+- fseek(FILE *stream, long offset, int whence): Di chuyển con trỏ tệp đến vị trí mới.
+- ftell(FILE *stream): Lấy vị trí hiện tại của con trỏ tệp.
+- rewind(FILE *stream): Đặt con trỏ tệp về vị trí đầu của tệp.
+  
+#### Ví dụ về thao tác với tệp tin trong C:
+	```c
+
+	#include <stdio.h>
+	
+	int main() {
+	    FILE *file;
+	    char str[100];
+	
+	    // Mở tệp để ghi
+	    file = fopen("example.txt", "w");
+	    if (file == NULL) {
+	        printf("Không thể mở tệp\n");
+	        return 1;
+	    }
+	
+	    // Ghi vào tệp
+	    fprintf(file, "Hello, World!\n");
+	    fclose(file);
+	
+	    // Mở tệp để đọc
+	    file = fopen("example.txt", "r");
+	    if (file == NULL) {
+	        printf("Không thể mở tệp\n");
+	        return 1;
+	    }
+	
+	    // Đọc dữ liệu từ tệp
+	    while (fgets(str, sizeof(str), file)) {
+	        printf("%s", str);
+	    }
+	
+	    fclose(file);
+	
+	    return 0;
+	}
+#### Các chế độ mở tệp tin:
+Tham số truyền vào access_mod là quyền sử dụng file:
+
+- r: Mở file với chế độ chỉ đọc file. Nếu mở file thành công thì trả về địa chỉ của phần tử đầu tiên trong file, nếu không thì trả về NULL.
+- rb: Mở file với chế độ chỉ đọc file theo định dạng binary. Nếu mở file thành công thì trả về địa chỉ của phần tử đầu tiên trong file, nếu không thì trả về NULL.
+- w: Mở file với chế độ ghi vào file. Nếu file đã tồn tại, thì sẽ ghi đè vào nội dung bên trong file. Nếu file chưa tồn tại thì sẽ tạo một file mới. Nếu không mở được file thì trả về NULL.
+- wb: Mở file với chế độ ghi vào file theo định dạng binary. Nếu file đã tồn tại, thì sẽ ghi đè vào nội dung bên trong file. Nếu file chưa tồn tại thì sẽ tạo một file mới. Nếu không mở được file thì trả về NULL.
+- a: Mở file với chế độ nối. Nếu mở file thành công thì trả về địa chỉ của phần tử cuối cùng trong file. Nếu file chưa tồn tại thì sẽ tạo một file mới. Nếu không mở được file thì trả về NULL.
+- ab: Mở file với chế độ nối dưới định dạng binary. Nếu mở file thành công thì trả về địa chỉ của phần tử cuối cùng trong file. Nếu file chưa tồn tại thì sẽ tạo một file mới. Nếu không mở được file thì trả về NULL.
+- r+: Mở file với chế độ đọc và ghi file. Nếu mở file thành công thì trả về địa chỉ của phần tử đầu tiên trong file, nếu không thì trả về NULL.
+- rb+: Mở file với chế độ đọc và ghi file dưới định dạng binary. Nếu mở file thành công thì trả về địa chỉ của phần tử đầu tiên trong file, nếu không thì trả về NULL.
+</details>
